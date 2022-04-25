@@ -270,7 +270,8 @@ function findComponentsInURL(currentTab) {
 
 function buildQuickWiresHtml(components) {
 
-    wordDocHtml = wordDocHtml + getComponentHtml("seo-url-breadcrumb");
+    wordDocHtml += getComponentHtml("seo-url-breadcrumb");
+    wordDocHtml += getComponentHtml("web-prod-info");
 
     //add each component html to the word document
     for (var i = 0; i < components.length; i++) {
@@ -304,7 +305,7 @@ function generateReviewHtml(pageHtml, currentTab) {
 
     var documentName = generateDocumentName(htmlObject);
 
-    //add seo to the document
+//add seo to the document
     //wordDocHtml += 'data:application/vnd.ms-word;charset=utf-8,';
     //wordDocHtml += "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
     wordDocHtml += populateSEOhtml(htmlObject, currentTab);
@@ -346,8 +347,19 @@ function populateSEOhtml(htmlObject, currentTab) {
     var seoObject = document.createElement('div');
     seoObject.innerHTML = getComponentHtml("seo-url-breadcrumb");
     var pageSEO = $(htmlObject).find("body > n-seo-region > div");
+    var seoImage = $(htmlObject).find("meta[property='og:image']");
+    var seoDescription = $(htmlObject).find("meta[name='description']");
+    var seoTitle = $(htmlObject).find("title");
     //console.log(pageSEO);
     $(seoObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(pageSEO, "ComponentID"), toBrowserTime(getCommentInfoFrom(pageSEO, "ComponentModified"))));
+
+    var imageLink = document.createElement("img");
+    if(typeof seoImage[0] !== 'undefined'){
+        imageLink.src = seoImage[0].content;
+    }
+    
+    
+
 
 
     //create a link from the current tab
@@ -362,9 +374,16 @@ function populateSEOhtml(htmlObject, currentTab) {
     reviewLink.innerHTML = currentTab.url;
     reviewLink.href = currentTab.url;
 
-    //set link in SEO html
+    //set values in SEO html    
     $(seoObject).find("#live-url").html(liveLink);
     $(seoObject).find("#review-url").html(reviewLink);
+    $(seoObject).find("#seo-image").html(createImageHtml(imageLink));
+    if(typeof seoDescription[0] !== 'undefined'){
+    $(seoObject).find("#page-description").html(seoDescription[0].content);
+    }
+    if(typeof seoTitle[0] !== 'undefined'){
+    $(seoObject).find("#page-title").html(seoTitle[0].innerHTML);
+    }
 
     return seoObject.innerHTML;
 }
