@@ -20,13 +20,19 @@ var listOfComponents = [
     ['Intro', 'Intro.html', 'n-intro', ''],
     ['Logo Band', 'Logo_Band.html', 'n-logo-band', ''],
     ['Offset Cards', 'Offset_Cards.html', 'n-offset-cards', ''],
+    ['Page Component', 'Page_Component.html', 'n-page', ''],
+    ['Page Guidelines', 'Page_Guidelines.html', 'n-page-guidelines', ''],
     ['Product Comparison Table', 'Product_Comparison_Table.html', 'n-product-comparison-table', ''],
-    ['Prose Block Quote', 'Prose_Block_Quote.html', ' ', ''],
+    ['Prose Author Bio', 'Prose_Author_Bio.html', 'n-prose-author-bio', ''],
+    ['Prose Block Quote', 'Prose_Block_Quote.html', 'n-prose-block-quote', ''],
     ['Prose Customer Metadata', 'Prose_Customer_Metadata.html', 'n-prose-meta-side-bar', ''],
+    ['Prose Event Card', 'Prose_Event_Card.html', 'n-prose-event-card', ''],
+    ['Prose Event Sidebar', 'Prose_Event_Sidebar.html', 'n-prose-event-sidebar', ''],
     ['Prose Full-Width Illustration', 'Prose_Full-Width_Illustration.html', 'n-prose-illustration-full-width', ''],
-    ['Prose II', 'Prose_II.html', 'prose-region-article', ''],
+    ['Prose II', 'Prose_II.html', 'n-prose-segment', ''],
     ['Prose Inline Media Player', 'Prose_Inline_Media_Player.html', 'n-prose-inline-media', ''],
     ['Prose Listicle', 'Prose_Listicle.html', 'n-prose-listicle', ''],
+    ['Prose Rich Text Aside', 'Prose_Rich_Text_Aside.html', 'n-prose-aside', ''],
     ['Prose Table of Contents', 'Prose_Table_of_Contents.html', 'n-prose-table-of-contents', ''],
     ['Prose', 'Prose.html', 'n-prose', ''],
     ['ProseGroup Region', 'ProseGroup_Region.html', ' ', ''],
@@ -41,10 +47,10 @@ var listOfComponents = [
     ['Tabbed Band with Tiles', 'Tabbed_Band_Tiles.html', 'n-tabbed-band-tiles', ''],
     ['Tabbed Band', 'Tabbed_Band.html', 'n-tabbed-band', ''],
     ['Title', 'Title.html', 'n-title', ''],
-    ['Webprod_Info', 'Page_Component.html', 'web-prod-info', ''],
     ['', 'Page_Component.html', 'n-prose-left-aside', ''],
     ['', 'Page_Component.html', 'n-prose-right-aside', ''],
     ['', 'Page_Component.html', 'n-prose-main', ''],
+    ['', 'Page_Component.html', 'n-prose-full-width', '']
 ]
 
 var listOfTcmIDs = [
@@ -144,6 +150,8 @@ function stopLoader() {
 
 //create a document
 function download(filename, text) {
+    //following meta tag is needed to help format the html for word
+    text = "<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'></meta>" + text;
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
     element.setAttribute('download', filename);
@@ -257,7 +265,7 @@ function findComponentsInURL(currentTab) {
             //remove empty strings 
             components = components.filter(Boolean);
             buildQuickWiresHtml(components);
-        }else {
+        } else {
             setMessage("We Are on the Quickwires<sup>™</sup> page", selectCompontMessage, "</br>");
             stopLoader();
         }
@@ -269,9 +277,9 @@ function findComponentsInURL(currentTab) {
 }
 
 function buildQuickWiresHtml(components) {
-
+    var tempDiv = document.createElement("div");
     wordDocHtml += getComponentHtml("seo-url-breadcrumb");
-    wordDocHtml += getComponentHtml("web-prod-info");
+    wordDocHtml += getComponentHtml("n-page");
 
     //add each component html to the word document
     for (var i = 0; i < components.length; i++) {
@@ -281,10 +289,14 @@ function buildQuickWiresHtml(components) {
         }
 
     }
+    tempDiv.innerHTML = wordDocHtml;
+    //$(tempDiv).find("table").attr("style", "border: 4px solid green;");
+    tempDiv = addNewBorder(tempDiv);
+
 
     //add download function
     document.getElementById("download-btn").addEventListener("click", function () {
-        download("quickwires-" + getCurentTimeStamp() + ".doc", wordDocHtml);
+        download("quickwires-" + getCurentTimeStamp() + ".doc", tempDiv.innerHTML);
 
     });
 
@@ -297,7 +309,10 @@ function buildQuickWiresHtml(components) {
     stopLoader();
 }
 
-
+function addNewBorder(element) {
+    $(element).find("table").attr("style", "border: 3px solid green;");
+    return element;
+}
 
 function generateReviewHtml(pageHtml, currentTab) {
     var htmlObject = document.createElement('html');
@@ -305,9 +320,10 @@ function generateReviewHtml(pageHtml, currentTab) {
 
     var documentName = generateDocumentName(htmlObject);
 
-//add seo to the document
+    //add seo to the document
     //wordDocHtml += 'data:application/vnd.ms-word;charset=utf-8,';
     //wordDocHtml += "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
+    wordDocHtml += getComponentHtml("n-page-guidelines");
     wordDocHtml += populateSEOhtml(htmlObject, currentTab);
     wordDocHtml += buildWebProdHtml(htmlObject, currentTab);
     wordDocHtml += buildPageComponentHtml(htmlObject);
@@ -326,18 +342,20 @@ function generateReviewHtml(pageHtml, currentTab) {
     stopLoader();
 }
 
-
-
-
-
 function generateDocumentName(htmlObject) {
     var documentName = "";
-    var title = htmlObject.getElementsByTagName("title")[0].innerHTML;
-    var pageTitle = title.split("|");
-    documentName = pageTitle[0].trim();
-    var zone = new Date().toLocaleTimeString('en-us', {
-        timeZoneName: 'short'
-    }).split(' ')[2]
+    var title = $(htmlObject).find("head > title");
+
+    if (typeof title[0] !== 'undefined') {
+        var pageTitle = title[0].innerText.split("|");
+        documentName = pageTitle[0].trim();
+
+    } else {
+        var tempALink = document.createElement('a');
+        tempALink.href = currentTab.url;
+
+        documentName = tempALink.pathname;
+    }
     return documentName;
 
 }
@@ -349,16 +367,16 @@ function populateSEOhtml(htmlObject, currentTab) {
     var pageSEO = $(htmlObject).find("body > n-seo-region > div");
     var seoImage = $(htmlObject).find("meta[property='og:image']");
     var seoDescription = $(htmlObject).find("meta[name='description']");
-    var seoTitle = $(htmlObject).find("title");
+    var seoTitle = $(htmlObject).find("head > title");
     //console.log(pageSEO);
     $(seoObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(pageSEO, "ComponentID"), toBrowserTime(getCommentInfoFrom(pageSEO, "ComponentModified"))));
 
     var imageLink = document.createElement("img");
-    if(typeof seoImage[0] !== 'undefined'){
+    if (typeof seoImage[0] !== 'undefined') {
         imageLink.src = seoImage[0].content;
     }
-    
-    
+
+
 
 
 
@@ -378,20 +396,26 @@ function populateSEOhtml(htmlObject, currentTab) {
     $(seoObject).find("#live-url").html(liveLink);
     $(seoObject).find("#review-url").html(reviewLink);
     $(seoObject).find("#seo-image").html(createImageHtml(imageLink));
-    if(typeof seoDescription[0] !== 'undefined'){
-    $(seoObject).find("#page-description").html(seoDescription[0].content);
+    if (typeof seoDescription[0] !== 'undefined') {
+        $(seoObject).find("#page-description").html(seoDescription[0].content);
     }
-    if(typeof seoTitle[0] !== 'undefined'){
-    $(seoObject).find("#page-title").html(seoTitle[0].innerHTML);
+    if (typeof seoTitle[0] !== 'undefined') {
+        $(seoObject).find("#page-title").html(seoTitle[0].innerHTML);
     }
+
+    if (typeof seoTitle[0] == 'undefined' && typeof seoDescription[0] == 'undefined' && typeof seoImage[0] == 'undefined') {
+        seoObject = addNewBorder(seoObject);
+    }
+
 
     return seoObject.innerHTML;
 }
 
 function buildWebProdHtml(htmlObject, currentTab) {
-    var webProdObject = document.createElement('div');
-    webProdObject.innerHTML = getComponentHtml("web-prod-info");
+    var pageObject = document.createElement('div');
+    pageObject.innerHTML = getComponentHtml("n-page");
     var pageSEO = $(htmlObject).find("body");
+    var breadCrumb = $(htmlObject).find("n-breadcrumb");
 
     //create a link from the current tab
     var url = currentTab.url.replace("https://ntapwwwprodstage-web9.azurewebsites.net/", "https://www.netapp.com/");
@@ -405,9 +429,9 @@ function buildWebProdHtml(htmlObject, currentTab) {
     reviewLink.innerHTML = currentTab.url;
     reviewLink.href = currentTab.url;
 
-    $(webProdObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(pageSEO, "PageID"), toBrowserTime(getCommentInfoFrom(pageSEO, "PageModified"))));
-    $(webProdObject).find("#page-url").html(liveLink);
-    $(webProdObject).find("#stage-url").html(reviewLink);
+    $(pageObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(pageSEO, "PageID"), toBrowserTime(getCommentInfoFrom(pageSEO, "PageModified"))));
+    $(pageObject).find("#page-url").html(liveLink);
+    $(pageObject).find("#stage-url").html(reviewLink);
 
     var metaTags = $(htmlObject).find("meta[property='article:tag'], meta[name='AssetType'], meta[name='AssetSubtype'], meta[name='AssetDescriptor'], meta[name='TargetAudience'], meta[name='BuyerStage'], meta[name='JobTitlesFunctions'], meta[name='Campaign'], meta[name='ProgramTopic'], meta[name='Event'], meta[name='EventDescriptor'], meta[name='SessionType'], meta[name='Department'], meta[name='Product'], meta[name='Services'], meta[name='Geo'], meta[name='GeoRegion'], meta[name='CountryRegion'], meta[name='Hyperscaler'], meta[name='Industry']");
 
@@ -416,13 +440,18 @@ function buildWebProdHtml(htmlObject, currentTab) {
         var metaTagName = metaTag.getAttribute("name");
         var metaProperty = metaTag.getAttribute("property");
         var metaTagValue = metaTag.getAttribute("content");
-        $(webProdObject).find("#tag-" + metaTagName).html(metaTagValue);
+        $(pageObject).find("#tag-" + metaTagName).html(metaTagValue);
         if (metaProperty == "article:tag") {
-            $(webProdObject).find("#tag-Custom").html(metaTagValue);
+            $(pageObject).find("#tag-Custom").html(metaTagValue);
         }
     }
 
-    return webProdObject.innerHTML;
+    if (typeof breadCrumb[0] !== 'undefined') {
+        $(pageObject).find("#breadcrumb").html(createBreadCrumb(breadCrumb[0]));
+        $(pageObject).find("#breadcrumb-enabled").html("Yes");
+    }
+
+    return pageObject.innerHTML;
 }
 
 function getComponentHtml(componentName) {
@@ -431,6 +460,28 @@ function getComponentHtml(componentName) {
             return listOfComponents[i][3];
         }
     }
+}
+
+function createBreadCrumb(htmlObject) {
+    $(htmlObject).find("a").each(function () {
+        createLinkData(this, "link")
+    });
+    var breadCrumbLinks = $(htmlObject).find("li > a, li > span");
+    var breadCrumb = document.createElement('p');
+
+
+
+
+    for (var i = 0; i < breadCrumbLinks.length; i++) {
+
+        breadCrumb.innerHTML += " <a href='" + breadCrumbLinks[i].href + "'>" + breadCrumbLinks[i].innerHTML + "</a> ";
+        if (i != breadCrumbLinks.length - 1) {
+            breadCrumb.innerHTML += "&nbsp;/&nbsp;";
+        }
+    }
+
+    return breadCrumb.innerHTML;
+
 }
 
 function getCurentTimeStamp() {
@@ -474,6 +525,21 @@ function createLinkData(aObject, returnType) {
     var linkText = "";
     var linkHref = "";
 
+    var currentTabUrl = document.createElement('a');
+    currentTabUrl.href = currentTab.url;
+
+    if (typeof aObject.href !== 'undefined') {
+        if (aObject.href == "https://ntapwwwprodstage-web9.azurewebsites.net/popup.html") {
+            aObject.href = currentTab.url;
+        }
+
+        aObject.href = aObject.href.replace("popup.html", currentTabUrl.pathname);
+    }
+
+    if (typeof aObject.innerText !== 'undefined') {
+        $(aObject).find('title').remove();
+    }
+
 
     if (aObject.classList.contains("cta--video")) {
         var videoJson = new Object();
@@ -506,6 +572,32 @@ function createLinkData(aObject, returnType) {
     } else if (returnType == "linkText") {
         return linkText;
     }
+}
+
+function createIframeLink(iframeObject) {
+    var linkText = "";
+    var linkHref = "";
+
+    if (typeof $(iframeObject).attr("data-src") !== 'undefined') {
+        linkHref = $(iframeObject).attr("data-src");
+        linkText = $(iframeObject).attr("data-src");
+    }
+    linkHref = removeStartingSlashesFromString(linkHref);
+    var linkHtml = "<a href='" + linkHref + "'>" + linkHref + "</a>";
+    return linkHtml;
+
+}
+
+function removeStartingSlashesFromString(string) {
+    console.log("run function: " + string);
+    var returnString = string;
+    if (string.charAt(0) == "/") {
+        string = string.substring(1);
+        string = removeStartingSlashesFromString(string);
+    }
+    return string;
+
+
 }
 
 function buildPageComponentHtml(htmlObject) {
@@ -598,10 +690,33 @@ function buildPageComponentHtml(htmlObject) {
             pageComponentHtml += buildProseLeftAside(pageComponents[i]);
         }
         if (pageComponents[i].localName == "n-prose-right-aside") {
-            //pageComponentHtml += buildProseRightAside(pageComponents[i]);
+            pageComponentHtml += buildProseRightAside(pageComponents[i]);
         }
-        if (pageComponents[i].localName == "n-prose-main") {
-            pageComponentHtml += buildProseMain(pageComponents[i]);
+
+        if (pageComponents[i].localName == "n-prose-segment" && $(pageComponents[i]).attr("data-ntap-analytics-region") == "ProseRegionArticle") {
+            pageComponentHtml += buildProseArticle(pageComponents[i]);
+        }
+        if (pageComponents[i].localName == "n-prose-listicle") {
+            pageComponentHtml += buildProseListicle(pageComponents[i]);
+        }
+
+        if (pageComponents[i].localName == "n-prose-table-of-contents") {
+
+        }
+
+        if (pageComponents[i].localName == "n-prose-inline-media") {
+            pageComponentHtml += buildProseInlineMedia(pageComponents[i]);
+        }
+        if (pageComponents[i].localName == "n-prose-author-bio") {
+            pageComponentHtml += buildProseAuthorBio(pageComponents[i]);
+        }
+        if (pageComponents[i].localName == "n-prose-event-card") {
+            pageComponentHtml += proseEventCard(pageComponents[i]);
+        }
+
+        //
+        if (pageComponents[i].localName == "n-prose-full-width") {
+            pageComponentHtml += buildProseFullWidth(pageComponents[i]);
         }
 
     }
@@ -780,6 +895,13 @@ function createCmsLinks(tcmID) {
 
 
     return tcmLinks;
+}
+
+function formatInLineTable(object) {
+    $(object).find("img").removeAttr("width");
+    $(object).find("img").attr("width", "640px");
+    $(object).find("table, th, td").attr("border", "1");
+    return object;
 }
 
 
@@ -1093,8 +1215,8 @@ function buildCardBandHtml(currentComponent) {
         }
 
         if (typeof cta[1] !== 'undefined') {
-            $(tempObject).find("#a" + (i + 1) + "-cta1").html(createLinkData(cta[1], "linkText"));
-            $(tempObject).find("#a" + (i + 1) + "-link1").html(createLinkData(cta[1], "link"));
+            $(tempObject).find("#a" + (i + 1) + "-cta2").html(createLinkData(cta[1], "linkText"));
+            $(tempObject).find("#a" + (i + 1) + "-link2").html(createLinkData(cta[1], "link"));
         }
 
     }
@@ -1112,6 +1234,7 @@ function buildFancyCallout(currentComponent) {
     var headline = $(currentComponent).find("n-secondary > n-content > h1");
     var body = $(currentComponent).find("n-xpm-richtext");
     var cta = $(currentComponent).find("a.cta");
+    var images = $(currentComponent).find("n-primary > picture > img");
 
     if (typeof headline[0] !== 'undefined') {
         $(tempObject).find("#a1-h1").html(headline[0].innerHTML);
@@ -1141,6 +1264,11 @@ function buildFancyCallout(currentComponent) {
             $(tempObject).find("#a1-link" + (i + 1) + "").html(createLinkData(cta[i], "link"));
         }
 
+    }
+
+    if (typeof images[0] !== 'undefined') {
+        $(tempObject).find("#a1-image-source").html((createImageHtml(images[0])));
+        $(tempObject).find("#a1-image-alt-text").html(images[0].alt);
     }
 
     return tempObject.innerHTML;
@@ -1739,30 +1867,6 @@ function buildProseMetaSideBar(currentComponent) {
     return tempObject.innerHTML;
 }
 
-function buildProseTableOfContents(currentComponent) {
-    var tempObject = document.createElement("div");
-    tempObject.innerHTML = getComponentHtml("n-prose-table-of-contents");
-    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
-
-    return tempObject.innerHTML;
-}
-
-function buildProseAside(currentComponent) {
-    var tempObject = document.createElement("div");
-    tempObject.innerHTML = getComponentHtml("n-prose-aside");
-    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
-
-    return tempObject.innerHTML;
-}
-
-function buildProseEventSideBar(currentComponent) {
-    var tempObject = document.createElement("div");
-    tempObject.innerHTML = getComponentHtml("n-prose-event-sidebar");
-    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
-
-    return tempObject.innerHTML;
-}
-
 function buildProseByline(currentComponent) {
     var tempObject = document.createElement("div");
     tempObject.innerHTML = getComponentHtml("n-prose-byline");
@@ -2155,7 +2259,12 @@ function buildShowcase(currentComponent) {
 function buildSideXSide(currentComponent) {
     var tempObject = document.createElement("div");
     tempObject.innerHTML = getComponentHtml("n-side-x-side");
-    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
+
+    if (currentComponent.parentNode.localName == "n-prose-full-width") {
+        $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
+    } else {
+        $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
+    }
 
     var headline = $(currentComponent).find("n-primary > n-content > h1");
     var body = $(currentComponent).find("n-xpm-richtext");
@@ -2711,10 +2820,12 @@ function buildProseLeftAside(currentProseLeftAside) {
             proseHtml += buildProseMetaSideBar(proseLeftAsideItems[i]);
         }
 
-        if (proseLeftAsideItems[i].localName == "n-prose-table-of-contents") {}
+        if (proseLeftAsideItems[i].localName == "n-prose-table-of-contents") {
+            proseHtml += buildProseTableOfContents(proseLeftAsideItems[i]);
+        }
 
         if (proseLeftAsideItems[i].localName == "n-prose-aside") {
-
+            proseHtml += buildProseAside(proseLeftAsideItems[i]);
         }
 
     }
@@ -2723,24 +2834,123 @@ function buildProseLeftAside(currentProseLeftAside) {
 
 }
 
+function buildProseRightAside(currentProseRightAside) {
+    var proseRightAsideComponents = $(currentProseRightAside).find("n-prose-event-sidebar");
+    var proseRightHTML = "";
+
+    for (var i = 0; i < proseRightAsideComponents.length; i++) {
+        if (proseRightAsideComponents[i].localName == "n-prose-event-sidebar") {
+            proseRightHTML += proseEventSideBar(proseRightAsideComponents[i]);
+        }
+    }
+    return proseRightHTML;
+}
+
 function buildProseMain(currentProseMain) {
-    var proseMainItems = $(currentProseMain).find("n-prose-segment");
+    var proseMainItems = $(currentProseMain).find("n-prose-segment[data-ntap-analytics-region='ProseRegionArticle'], n-prose-listicle, n-prose-inline-media, n-prose-author-bio, n-prose-event-card");
     var proseMainHTML = "";
 
     for (var i = 0; i < proseMainItems.length; i++) {
         if (proseMainItems[i].localName == "n-prose-segment" && $(proseMainItems[i]).attr("data-ntap-analytics-region") == "ProseRegionArticle") {
             proseMainHTML += buildProseArticle(proseMainItems[i]);
         }
+        if (proseMainItems[i].localName == "n-prose-listicle") {
+            proseMainHTML += buildProseListicle(proseMainItems[i]);
+        }
 
-        if (proseMainItems[i].localName == "n-prose-table-of-contents") {}
-
-        if (proseMainItems[i].localName == "n-prose-aside") {
+        if (proseMainItems[i].localName == "n-prose-table-of-contents") {
 
         }
+
+        if (proseMainItems[i].localName == "n-prose-inline-media") {
+            proseMainHTML += buildProseInlineMedia(proseMainItems[i]);
+        }
+        if (proseMainItems[i].localName == "n-prose-author-bio") {
+            proseMainHTML += buildProseAuthorBio(proseMainItems[i]);
+        }
+        if (proseMainItems[i].localName == "n-prose-event-card") {
+            proseMainHTML += proseEventCard(proseMainItems[i]);
+        }
+
 
     }
 
     return proseMainHTML;
+}
+
+function buildProseListicle(currentComponent) {
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = getComponentHtml('n-prose-listicle');
+
+    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
+    $(tempObject).find("#page-content").html("");
+
+    var listicleSection = $(currentComponent).find("section");
+
+    var listiclesToMake = listicleSection.length;
+
+
+    //make at least 3 listicle sections plus one empty section.
+    if (listicleSection.length < 3) {
+        listiclesToMake = 4;
+    } else {
+        listiclesToMake = listicleSection.length + 1;
+    }
+
+    for (var i = 0; i < listiclesToMake; i++) {
+        var index = 1 + i;
+        var listicleSectionHTML =
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Number]&nbsp;</strong></p>" +
+            "<p id = 'number-" + index + "'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;</p>" +
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Headline]</strong></p>" +
+            "<p id = 'headline-" + index + "'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;</p>" +
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Body]</strong></p>" +
+            "<p id ='body-" + index + "'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;</p>" +
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;</p>";
+        $(tempObject).find("#page-content").append(listicleSectionHTML);
+    }
+
+    for (var i = 0; i < listicleSection.length; i++) {
+        var index = 1 + i;
+        var number = $(listicleSection[i]).find("span");
+        var headline = $(listicleSection[i]).find("h4");
+        var body = $(listicleSection[i]).find("n-richtext");
+
+        if (typeof number[0] !== "undefined") {
+            $(tempObject).find("#number-" + index).html(number[0].innerHTML + "<br/>");
+        }
+
+        if (typeof headline[0] !== "undefined") {
+            $(tempObject).find("#headline-" + index).html(headline[0].innerHTML + "<br/>");
+        }
+
+        if (typeof body[0] !== "undefined") {
+            $(tempObject).find("#body-" + index).html(body[0].innerHTML);
+        }
+    }
+
+
+    return tempObject.innerHTML;
+
+}
+
+function buildProseFullWidth(currentFullWidth) {
+    var proseFullWidthContent = $(currentFullWidth).find("n-prose-illustration-full-width, n-prose-block-quote");
+    var fullWidthHTml = "";
+
+    for (var i = 0; i < proseFullWidthContent.length; i++) {
+        if (proseFullWidthContent[i].localName == "n-prose-illustration-full-width") {
+            fullWidthHTml += buildProseFullWidthIllustration(proseFullWidthContent[i]);
+        }
+        if (proseFullWidthContent[i].localName == "n-prose-block-quote") {
+            fullWidthHTml += buildProseBlockQuote(proseFullWidthContent[i]);
+        }
+
+    }
+
+    return fullWidthHTml;
+
+
 }
 
 function buildProseMetaSideBar(currentComponent) {
@@ -2772,34 +2982,158 @@ function buildProseMetaSideBar(currentComponent) {
     return tempObject.innerHTML;
 }
 
+function buildProseTableOfContents(currentComponent) {
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = getComponentHtml("n-prose-table-of-contents");
+    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
+
+    var heading = $(currentComponent).find("header");
+    var rteBody = $(currentComponent).find("n-xpm-richtext");
+    var cta = $(currentComponent).find("a.cta");
+    var toc = $(currentComponent).find("nav");
+
+    if (typeof heading[0] !== "undefined") {
+        $(tempObject).find("#a1-h1").html(heading[0].innerHTML);
+    }
+
+    if (typeof rteBody[0] !== "undefined") {
+        $(tempObject).find("#rte-body").html(rteBody[0].innerHTML);
+    }
+
+
+    if (typeof cta[0] !== 'undefined') {
+        if (cta.length > 0) {
+            $(tempObject).find("#use-cta").html("Yes");
+        }
+        $(tempObject).find("#a1-cta1").html(createLinkData(cta[0], "linkText"));
+        $(tempObject).find("#a1-link1").html(createLinkData(cta[0], "link") + "</br>");
+    } else {
+        $(tempObject).find("#use-cta").html("No");
+    }
+
+    if (cta.length > 1) {
+        for (var i = 1; i < cta.length; i++) {
+            var addAnotherCtaSection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[CTA " + (i + 1) + "]</strong></p>" +
+                "<p id = 'a1-cta" + (i + 1) + "' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
+                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Link " + (i + 1) + "]</strong></p>" +
+                "<p id = 'a1-link" + (i + 1) + "' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>"
+            $(tempObject).find("#page-content").append(addAnotherCtaSection);
+            $(tempObject).find("#a1-cta" + (i + 1) + "").html(createLinkData(cta[i], "linkText") + "</br>");
+            $(tempObject).find("#a1-link" + (i + 1) + "").html(createLinkData(cta[i], "link") + "</br>");
+        }
+
+    }
+    if (typeof toc[0] !== "undefined") {
+        var subHeadCount = $(toc[0]).find("ul.dashed-list").length;
+
+        //if we have sub headings, set the sub heading yes/no
+        if (subHeadCount > 0) {
+            $(tempObject).find("#use-secondary-heading").html("Yes");
+        } else {
+            $(tempObject).find("#use-secondary-heading").html("No");
+        }
+
+        $(toc).find("a").each(function () {
+            createLinkData(this, "link")
+        });
+        $(tempObject).find("#nav-table").html(toc[0].innerHTML);
+    }
+
+
+
+    return tempObject.innerHTML;
+}
+
+function buildProseAside(currentComponent) {
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = getComponentHtml("n-prose-aside");
+    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.firstElementChild, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.firstElementChild, "ComponentModified"))));
+
+    var rtfContent = $(currentComponent).find("n-xpm-richtext");
+
+    if (typeof rtfContent[0] !== "undefined") {
+        $(tempObject).find("#rtf-body").html(rtfContent[0].innerHTML);
+    }
+
+    return tempObject.innerHTML;
+}
+
 function buildProseArticle(currentProseSegment) {
     var tempObject = document.createElement("div");
-    tempObject.innerHTML = getComponentHtml("prose-region-article");
+    tempObject.innerHTML = getComponentHtml("n-prose-segment");
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentProseSegment, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentProseSegment, "ComponentModified"))));
+    //remove current text in the Html Template
     $(tempObject).find("#page-content").html("");
 
-    var getContentElements = $(currentProseSegment).children("a.eyebrow, h2, n-xpm-rich-text");
+    var getContentElements = $(currentProseSegment).children("n-xpm-eyebrow, h2, h3, n-xpm-richtext, n-button-group");
+    console.log(getContentElements);
+
+    var bodyCount = 0;
+    var mainHeadingCount = 0;
+    var secondaryHeadingCount = 0;
 
     for (var i = 0; i < getContentElements.length; i++) {
         var index = (i + 1);
-        if (getContentElements[i].localName == "a" && getContentElements[i].className == "eyebrow") {
-            if (typeof getContentElements[i] !== "undefined" && getContentElements[i].innerHTML != "") {
+
+        if (getContentElements[i].localName == "n-xpm-eyebrow") {
+            if (typeof getContentElements[i] != "undefined" && getContentElements[i].innerHTML != "") {
+
                 var eyeBrowSection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Eyebrow CTA]</strong></p>" +
                     "<p id = 'a" + index + "-cta-eye' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
                     "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Eyebrow Link]</strong></p>" +
-                    "<p id = 'a" + index + "-link-eye' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>";
+                    "<p id = 'a" + index + "-link-eye' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p><br/>";
                 $(tempObject).find("#page-content").append(eyeBrowSection);
-                $(tempObject).find("#a" + index + "-cta-eye").html(createLinkData(getContentElements[i], "linkText"));
-                $(tempObject).find("#a" + index + "-link-eye").html(createLinkData(getContentElements[i], "link"));
+                var currentEyeBrow = $(getContentElements[i]).find("a.eyebrow");
+                if (typeof currentEyeBrow[0] !== "undefined") {
+                    if (currentEyeBrow[0].innerText != "") {
+                        $(tempObject).find("#a" + index + "-cta-eye").html(createLinkData(currentEyeBrow[0], "linkText") + "<br/>");
+                        $(tempObject).find("#a" + index + "-link-eye").html(createLinkData(currentEyeBrow[0], "link") + "<br/>");
+                    }
+                }
+
 
             }
         }
         if (getContentElements[i].localName == "h2") {
-            //$(tempObject).find("#page-content").append(buildHeadline(getContentElements[i]));
+            mainHeadingCount++;
+            var mainHeadingSection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Main Heading]</strong></p>" +
+                "<p id = 'a" + index + "-main-heading' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p><br/>";
+            $(tempObject).find("#page-content").append(mainHeadingSection);
+            $(tempObject).find("#a" + index + "-main-heading").html(getContentElements[i].innerHTML + "<br/>");
         }
-        if (getContentElements[i].localName == "n-xpm-rich-text") {
+        if (getContentElements[i].localName == "h3") {
+            secondaryHeadingCount++;
+            var mainHeadingSection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Secondary Heading]</strong></p>" +
+                "<p id = 'a" + index + "-secondary-heading' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p><br/>";
+            $(tempObject).find("#page-content").append(mainHeadingSection);
+            $(tempObject).find("#a" + index + "-secondary-heading").html(getContentElements[i].innerHTML + "<br/>");
+        }
+        if (getContentElements[i].localName == "n-xpm-richtext") {
+            bodyCount++;
+            getContentElements[i] = formatInLineTable(getContentElements[i]);
+            var bodySection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Body " + bodyCount + "]</strong></p>" +
+                "<p id = 'a" + index + "-body" + bodyCount + "' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p><br/>";
+            $(tempObject).find("#page-content").append(bodySection);
+            $(tempObject).find("#a" + index + "-body" + bodyCount).html(getContentElements[i].innerHTML + "<br/>");
+        }
+
+        if (getContentElements[i].localName == "n-button-group") {
+            var cta = $(getContentElements[i]).find("a.cta");
+            if (cta.length > 1) {
+                for (var j = 0; j < cta.length; j++) {
+                    var addAnotherCtaSection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[CTA " + (j + 1) + "]</strong></p>" +
+                        "<p id = 'a" + index + "-cta" + (j + 1) + "' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
+                        "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Link " + (j + 1) + "]</strong></p>" +
+                        "<p id = 'a" + index + "-link" + (j + 1) + "' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>"
+                    $(tempObject).find("#page-content").append(addAnotherCtaSection);
+                    $(tempObject).find("#a" + index + "-cta" + (j + 1) + "").html(createLinkData(cta[j], "linkText"));
+                    $(tempObject).find("#a" + index + "-link" + (j + 1) + "").html(createLinkData(cta[j], "link"));
+                }
+
+            }
 
         }
+
 
 
 
@@ -2807,5 +3141,305 @@ function buildProseArticle(currentProseSegment) {
 
 
     return tempObject.innerHTML;
+
+}
+
+function buildProseFullWidthIllustration(currentComponent) {
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = getComponentHtml('n-prose-illustration-full-width');
+
+    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
+
+    var cta = $(currentComponent).find("a.cta");
+    var image = $(currentComponent).find("img");
+    var caption = $(currentComponent).find("figcaption");
+
+    if (typeof image[0] !== "undefined") {
+        $(tempObject).find("#a1-image-source").html((createImageHtml(image[0])));
+        $(tempObject).find("#a1-image-alt-text").html(image[0].alt + "<br/>");
+    }
+
+    if (typeof caption[0] !== "undefined") {
+        $(tempObject).find("#a1-caption").html(caption[0].innerHTML + "<br/>");
+    }
+    if (typeof cta[0] !== "undefined") {
+        $(tempObject).find("#a1-video").html(createLinkData(cta[0], "link") + "<br/>");
+    }
+
+
+    return tempObject.innerHTML;
+
+}
+
+function buildProseBlockQuote(currentComponent) {
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = getComponentHtml('n-prose-block-quote');
+
+    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
+
+    var body = $(currentComponent).find("n-content > blockquote > h2");
+    var attribution = $(currentComponent).find("n-content > blockquote > p");
+    var cta = $(currentComponent).find("n-button-group").find("a.cta");
+    var theme = $(currentComponent).attr("n-theme");
+    console.log(theme);
+
+    if (typeof theme != "") {
+        $(tempObject).find("#a1-theme").html(theme + "<br/>");
+    }
+
+    var eyeBrow = $(currentComponent).find("n-eyebrow > a.eyebrow");
+
+    if (typeof eyeBrow[0] !== "undefined" && eyeBrow[0].innerHTML != "") {
+        var eyeBrowSection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Eyebrow CTA]</strong></p>" +
+            "<p id = 'a1-cta-eye' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Eyebrow Link]</strong></p>" +
+            "<p id = 'a1-link-eye' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>";
+        $(tempObject).find("#page-content").before(eyeBrowSection);
+        $(tempObject).find("#a1-cta-eye").html(createLinkData(eyeBrow[0], "linkText"));
+        $(tempObject).find("#a1-link-eye").html(createLinkData(eyeBrow[0], "link"));
+
+    }
+
+    if (typeof attribution[0] !== 'undefined') {
+        $(tempObject).find("#a1-attribution").html(attribution[0].innerHTML);
+    }
+
+    if (typeof body[0] !== 'undefined') {
+        $(tempObject).find("#a1-body").html(body[0].innerHTML);
+    }
+
+    if (typeof cta[0] !== 'undefined') {
+        $(tempObject).find("#a1-cta1").html(createLinkData(cta[0], "linkText"));
+        $(tempObject).find("#a1-link1").html(createLinkData(cta[0], "link"));
+    }
+
+    if (typeof cta[1] !== 'undefined') {
+        $(tempObject).find("#a1-cta2").html(createLinkData(cta[1], "linkText"));
+        $(tempObject).find("#a1-link2").html(createLinkData(cta[1], "link"));
+    }
+    if (cta.length > 2) {
+        for (var i = 2; i < cta.length; i++) {
+            var addAnotherCtaSection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[CTA " + (i + 1) + "]</strong></p>" +
+                "<p id = 'a1-cta" + (i + 1) + "' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
+                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Link " + (i + 1) + "]</strong></p>" +
+                "<p id = 'a1-link" + (i + 1) + "' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>"
+            $(tempObject).find("#page-content").append(addAnotherCtaSection);
+            $(tempObject).find("#a1-cta" + (i + 1) + "").html(createLinkData(cta[i], "linkText"));
+            $(tempObject).find("#a1-link" + (i + 1) + "").html(createLinkData(cta[i], "link"));
+        }
+
+    }
+
+
+    return tempObject.innerHTML;
+
+
+}
+
+function buildProseInlineMedia(currentComponent) {
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = getComponentHtml('n-prose-inline-media');
+
+    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
+
+    var cta = $(currentComponent).find("a.cta");
+    var iframeMedia = $(currentComponent).find("iframe");
+    var image = $(currentComponent).find("img");
+    var caption = $(currentComponent).find("figcaption");
+
+    if (typeof image[0] !== "undefined") {
+        $(tempObject).find("#a1-image-source").html((createImageHtml(image[0])));
+        $(tempObject).find("#a1-image-alt-text").html(image[0].alt + "<br/>");
+    }
+
+    if (typeof caption[0] !== "undefined") {
+        $(tempObject).find("#a1-caption").html(caption[0].innerHTML + "<br/>");
+    }
+    if (typeof cta[0] !== "undefined") {
+        $(tempObject).find("#a1-media").html(createLinkData(cta[0], "link") + "<br/>");
+    }
+
+    if (typeof iframeMedia[0] !== "undefined") {
+        $(tempObject).find("#a1-media").html(createIframeLink(iframeMedia[0]) + "<br/>");
+    }
+
+
+    return tempObject.innerHTML;
+}
+
+function buildProseAuthorBio(currentComponent) {
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = getComponentHtml('n-prose-author-bio');
+
+    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
+
+    var name = $(currentComponent).find("h4");
+    var body = $(currentComponent).find("n-xpm-richtext");
+    var cta = $(currentComponent).find("n-button-group").find("a.cta");
+    var twitterLink = $(currentComponent).find("a[title='Twitter']");
+    var linkedInLink = $(currentComponent).find("a[title='LinkedIn']");
+    var images = $(currentComponent).find("img");
+
+    if (typeof images[0] !== 'undefined') {
+        $(tempObject).find("#a1-image-source").html((createImageHtml(images[0])));
+        $(tempObject).find("#a1-image-alt-text").html(images[0].alt);
+    }
+
+    if (typeof twitterLink[0] !== "undefined") {
+        $(tempObject).find("#a1-twitter").html(createLinkData(twitterLink[0], "link") + "<br/>");
+    }
+    if (typeof linkedInLink[0] !== "undefined") {
+        $(tempObject).find("#a1-linkedin").html(createLinkData(linkedInLink[0], "link") + "<br/>");
+    }
+
+    if (typeof name[0] !== "undefined") {
+        $(tempObject).find("#a1-author-name").html(name[0].innerHTML + "<br/>");
+    }
+
+
+
+    if (typeof body[0] !== 'undefined') {
+        $(tempObject).find("#a1-body").html(body[0].innerHTML);
+    }
+
+    if (typeof cta[0] !== 'undefined') {
+        $(tempObject).find("#a1-cta1").html(createLinkData(cta[0], "linkText"));
+        $(tempObject).find("#a1-link1").html(createLinkData(cta[0], "link"));
+    }
+
+    if (cta.length > 1) {
+        for (var i = 1; i < cta.length; i++) {
+            var addAnotherCtaSection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[CTA " + (i + 1) + "]</strong></p>" +
+                "<p id = 'a1-cta" + (i + 1) + "' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
+                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Link " + (i + 1) + "]</strong></p>" +
+                "<p id = 'a1-link" + (i + 1) + "' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>"
+            $(tempObject).find("#page-content").append(addAnotherCtaSection);
+            $(tempObject).find("#a1-cta" + (i + 1) + "").html(createLinkData(cta[i], "linkText"));
+            $(tempObject).find("#a1-link" + (i + 1) + "").html(createLinkData(cta[i], "link"));
+        }
+
+    }
+
+
+    return tempObject.innerHTML;
+}
+
+function proseEventSideBar(currentComponent) {
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = getComponentHtml('n-prose-event-sidebar');
+
+    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
+    var headline = $(currentComponent).find(" div.prose-event-sidebar-title-container > h3");
+    var subHead = $(currentComponent).find("div.prose-event-sidebar-event-type-container");
+    var cta = $(currentComponent).find("n-button-group").find("a.cta");
+
+
+    if (typeof headline[0] !== 'undefined') {
+        $(tempObject).find("#a1-h1").html(headline[0].innerHTML + "</br>");
+    }
+
+    if (typeof subHead[0] !== 'undefined') {
+        $(tempObject).find("#a1-h2").html(subHead[0].innerHTML + "</br>");
+    }
+
+    if (typeof cta[0] !== 'undefined') {
+        $(tempObject).find("#a1-cta1").html(createLinkData(cta[0], "linkText"));
+        $(tempObject).find("#a1-link1").html(createLinkData(cta[0], "link") + "</br>");
+    }
+
+    if (cta.length > 1) {
+        for (var i = 1; i < cta.length; i++) {
+            var addAnotherCtaSection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[CTA " + (i + 1) + "]</strong></p>" +
+                "<p id = 'a1-cta" + (i + 1) + "' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
+                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Link " + (i + 1) + "]</strong></p>" +
+                "<p id = 'a1-link" + (i + 1) + "' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>"
+            $(tempObject).find("#page-content").append(addAnotherCtaSection);
+            $(tempObject).find("#a1-cta" + (i + 1) + "").html(createLinkData(cta[i], "linkText") + "</br>");
+            $(tempObject).find("#a1-link" + (i + 1) + "").html(createLinkData(cta[i], "link") + "</br>");
+        }
+
+    }
+
+
+    return tempObject.innerHTML;
+}
+
+function proseEventCard(currentComponent) {
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = getComponentHtml('n-prose-event-card');
+    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
+    var headline = $(currentComponent).find("div.prose-event-card-title-container > h3");
+    var subHead = $(currentComponent).find("div.prose-event-card-event-type-container");
+    var body = $(currentComponent).find("div.prose-event-card-description-container");
+
+    var cta = $(currentComponent).find("n-button-group").find("a.cta");
+    var images = $(currentComponent).find("n-secondary > img");
+
+
+    if (typeof headline[0] !== 'undefined') {
+        $(tempObject).find("#a1-h1").html(headline[0].innerHTML + "</br>");
+    }
+
+    if (typeof subHead[0] !== 'undefined') {
+        $(tempObject).find("#a1-h2").html(subHead[0].innerHTML + "</br>");
+    }
+
+    if (typeof body[0] !== 'undefined') {
+        $(tempObject).find("#a1-body").html(body[0].innerHTML + "</br>");
+    }
+
+    if (typeof cta[0] !== 'undefined') {
+        $(tempObject).find("#a1-cta1").html(createLinkData(cta[0], "linkText"));
+        $(tempObject).find("#a1-link1").html(createLinkData(cta[0], "link") + "</br>");
+    }
+
+    if (cta.length > 1) {
+        for (var i = 1; i < cta.length; i++) {
+            var addAnotherCtaSection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[CTA " + (i + 1) + "]</strong></p>" +
+                "<p id = 'a1-cta" + (i + 1) + "' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
+                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Link " + (i + 1) + "]</strong></p>" +
+                "<p id = 'a1-link" + (i + 1) + "' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>"
+            $(tempObject).find("#page-content").append(addAnotherCtaSection);
+            $(tempObject).find("#a1-cta" + (i + 1) + "").html(createLinkData(cta[i], "linkText") + "</br>");
+            $(tempObject).find("#a1-link" + (i + 1) + "").html(createLinkData(cta[i], "link") + "</br>");
+        }
+
+    }
+
+    if (typeof images[0] !== 'undefined') {
+        $(tempObject).find("#a1-image-source").html((createImageHtml(images[0])));
+        $(tempObject).find("#a1-image-alt-text").html(images[0].alt);
+    }
+
+    return tempObject.innerHTML;
+}
+
+function proseRegionTwo(currentComponent) {
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = getComponentHtml('n-prose-region-two');
+    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
+    var headline = $(currentComponent).find("div.prose-region-two-title-container > h3");
+    var subHead = $(currentComponent).find("div.prose-region-two-event-type-container");
+    var body = $(currentComponent).find("div.prose-region-two-description-container");
+    var cta = $(currentComponent).find("n-button-group").find("a.cta");
+    var images = $(currentComponent).find("n-secondary > img");
+
+    if (typeof headline[0] !== 'undefined') {
+        $(tempObject).find("#a1-h1").html(headline[0].innerHTML + "</br>");
+    }
+
+    if (typeof subHead[0] !== 'undefined') {
+        $(tempObject).find("#a1-h2").html(subHead[0].innerHTML + "</br>");
+    }
+
+    if (typeof body[0] !== 'undefined') {
+        $(tempObject).find("#a1-body").html(body[0].innerHTML + "</br>");
+    }
+
+    if (typeof cta[0] !== 'undefined') {
+        $(tempObject).find("#a1-cta1").html(createLinkData(cta[0], "linkText"));
+        $(tempObject).find("#a1-link1").html(createLinkData(cta[0], "link") + "</br>");
+    }
+
 
 }

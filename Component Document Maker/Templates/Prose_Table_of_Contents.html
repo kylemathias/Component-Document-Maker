@@ -3,7 +3,7 @@
     <tbody>
         <tr style="height: 15px;">
             <td style="border: 1pt solid black; background: none 0% 0% repeat scroll #e7e6e6; padding: 0in; height: 15px; width: 610px;" valign="top">
-                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><em>Component name: <span style="color: black;">Table of Contents &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span></em></p>
+                <p id="heading-append" style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><em>Component name: <span style="color: black;">Table of Contents &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span></em></p>
             </td>
         </tr>
         <tr style="height: 188px;">
@@ -13,15 +13,15 @@
                 <ul>
                     <li style="font-size: 14px;"><span style="font-size: 14px;">Default value in English: &quot;Table of contents&quot;.</span></li>
                 </ul>
-                <p><span style="font-size: 14px;">Anchor to Major Heading (optional)</span></p>
+                <p><span style="font-size: 14px;">Anchor to Main Heading (optional)</span></p>
                 <ul>
                     <li style="font-size: 14px;"><span style="font-size: 14px;">Automated to match prose/component headline. Override if desired.&nbsp;</span></li>
                 </ul>
-                <p><span style="font-size: 14px;">Anchor to Minor Heading (optional)</span></p>
+                <p><span style="font-size: 14px;">Anchor to Secondary Heading (optional)</span></p>
                 <ul>
                     <li style="font-size: 14px;"><span style="font-size: 14px;">Automated to match prose/component headline. Override if desired.&nbsp;</span></li>
                 </ul>
-                <p><span style="font-size: 14px;">RTE Block (optional)</span></p>
+                <p><span style="font-size: 14px;">RTE Body (optional)</span></p>
                 <ul>
                     <li style="font-size: 14px;"><span style="font-size: 14px;">Open field.</span></li>
                 </ul>
@@ -37,11 +37,11 @@
             </td>
         </tr>
         <tr style="height: 150px;">
-            <td style="width: 610px; border-color: currentcolor black black; border-style: none solid solid; border-width: medium 1pt 1pt; border-image: none 100% / 1 / 0 stretch; padding: 0in; height: 150px;" valign="top">
-                <p><span style="font-size: 13px;">Set TOC to be Sticky (<em><span style="color: #e03e2d;">important: see warnings below</span></em>): <strong>[yes/ no]&nbsp;</strong></span></p>
-                <p><span style="font-size: 13px;">Reveal minor headings: <strong>[yes/ no]</strong></span></p>
-                <p><span style="font-size: 13px;">Use RTE Block: <strong>[yes/ no]</strong></span></p>
+            <td style="width: 610px; border-color: currentcolor black black; border-style: none solid solid; border-width: medium 1pt 1pt; border-image: none 100% / 1 / 0 stretch; padding: 0in; height: 150px;" valign="top">                
+                <p><span style="font-size: 13px;">Reveal Secondary Heading: <strong>[yes/ no]</strong></span></p>
+                <p id = 'use-secondary-heading'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>                
                 <p><span style="font-size: 13px;">Use CTA: <strong>[yes/ no]</strong></span></p>
+                <p id = 'use-cta'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>
             </td>
         </tr>
         <tr style="height: 30px;">
@@ -50,29 +50,35 @@
             </td>
         </tr>
         <tr style="height: 54.6pt;">
-            <td style="width: 610px; border-color: currentcolor black black; border-style: none solid solid; border-width: medium 1pt 1pt; border-image: none 100% / 1 / 0 stretch; padding: 0in; height: 150px;" valign="top">
-                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><em>If ToC used:</em></p>
+            <td id="page-content" style="width: 610px; border-color: currentcolor black black; border-style: none solid solid; border-width: medium 1pt 1pt; border-image: none 100% / 1 / 0 stretch; padding: 0in; height: 150px;" valign="top">                
+                <p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Headline]&nbsp;</strong></p>
+                <p id = 'a1-h1'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>
+            <div id="nav-table">
+                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Main Heading Anchor]</strong></p>
                 <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
-                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Heading]</strong></p>
+                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Secondary Heading Anchor]</strong></p>
+                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Secondary Heading Anchor]</strong></p>
+                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Secondary Heading Anchor]</strong></p>
                 <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
-                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Anchor to major heading]</strong></p>
-                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Anchor to minor heading]</strong></p>
-                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Anchor to minor heading]</strong></p>
+                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Main Heading Anchor]</strong></p>
+                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Secondary Heading Anchor]</strong></p>
+                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Secondary Heading Anchor]</strong></p>
                 <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
-                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Anchor to major heading]</strong></p>
-                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Anchor to minor heading]</strong></p>
-                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Anchor to minor heading]</strong></p>
+                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Main Heading Anchor]</strong></p>
+                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Secondary Heading Anchor]</strong></p>
+                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Secondary Heading Anchor]</strong></p>
                 <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
-                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Anchor to major heading]</strong></p>
-                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Anchor to minor heading]</strong></p>
-                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>[Anchor to minor heading]</strong></p>
-                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
-                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><em>If RTE Block:&nbsp;</em></p>
-                <p><span style="font-size: 13px;"><strong>[Text]</strong></span></p>
-                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><em>If CTA:&nbsp;</em></p>
-                <p><span style="font-size: 13px;"><strong>[CTA]<br></strong></span><span style="font-size: 13px;"><strong>[Link]</strong></span></p>
+            </div>  
+                <p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[RTE Body]</strong></p>
+                <p id="rte-body"><span style="font-size: 13px;"><strong></strong></span></p>
+                <p style="margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;"><em>&nbsp;</em></p>
+                <p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[CTA]</strong></p>
+                <p id = 'a1-cta1'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>
+                <p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Link]</strong></p>
+                <p id = 'a1-link1' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>
             </td>
         </tr>
+        
     </tbody>
 </table>
 <p style="margin: 0in; line-height: 107%; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>&nbsp;</strong></p>
