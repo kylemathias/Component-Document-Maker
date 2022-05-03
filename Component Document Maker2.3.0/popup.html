@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!--- JS -->
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/bootstrap-maxlength.js"></script>
+  
+    <!--- CSS -->
+    <link type="text/css" href="css/bootstrap.min.css" rel="stylesheet">
+    <link type="text/css" href="css/main.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <body>
+        <div class="global-box">
+            <section class="hero">
+                <div class="logo">
+                    <div class="col logo-div">
+                        <div class="n-masthead__property-mark">
+                            <a href="https://www.netapp.com/" title="NetApp">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1008 181.536" class="netapp-logo">
+                                    <path fill="black" d="M0 0v147.978h69.062V59.187h39.462v88.791h69.048V0z"></path>
+                                    <path fill="#010101"
+                                        d="M256.498.021h29.832l68.817 91.481V.021h31.898v147.937h-27.477l-71.159-93.403v93.411h-31.913L256.498.021zm146.066 92.327c0 34.43 24.973 58.139 58.786 58.139 20.335 0 35.446-7.979 45.908-21.004l-18.23-16.16c-8.81 8.199-16.571 11.562-27.265 11.562-14.3 0-24.342-7.559-27.497-22.037h78.266c.244-2.926.43-5.898.43-8.377 0-31.912-17.207-61.078-54.743-61.078-32.749 0-55.641 26.438-55.641 58.516v.439m31.247-9.455c2.507-14.453 11.121-23.932 24.379-23.932 13.401 0 21.812 9.639 23.69 23.932h-48.069zm99.045 33.149c0 26.027 13.216 33.793 32.694 33.793 10.707 0 18.512-2.518 25.225-6.51v-25.621c-4.632 2.559-9.87 4.041-15.766 4.041-7.106 0-10.268-3.596-10.268-10.943V62.743h26.456v-27.27h-26.456V6.726h-31.888v28.748H519.44v27.27h13.427l.003 53.298m225.878 65.494h31.866v-48.26c7.558 9.008 18.054 16.783 35.046 16.783 26.678 0 51.229-20.564 51.229-58.154v-.4c0-37.566-24.962-58.117-51.229-58.117-16.562 0-27.271 7.738-35.046 18.235V35.477h-31.866v146.059zm86.194-89.629c0 18.889-12.576 31.086-27.469 31.086-14.896 0-27.271-12.402-27.271-31.086v-.402c0-18.679 12.388-31.05 27.271-31.05 14.893 0 27.469 12.371 27.469 31.05v.402m44.912 89.629h31.895v-48.26c7.543 9.008 18.045 16.783 35.066 16.783 26.627 0 51.186-20.564 51.186-58.154v-.4c0-37.566-24.961-58.117-51.186-58.117-16.584 0-27.297 7.738-35.066 18.235V35.477h-31.895v146.059zm86.265-89.629c0 18.889-12.619 31.086-27.52 31.086-14.855 0-27.271-12.402-27.271-31.086v-.402c0-18.679 12.412-31.05 27.271-31.05 14.899 0 27.52 12.371 27.52 31.05v.402m-377.165 56.056h32.938l13.438-32.975h58.239l13.524 32.975h33.666L689.376.006h-29.051l-61.371 147.957zm55.965-61.459l19.534-47.701 19.513 47.701h-39.047z">
+                                    </path>
+                                </svg>
+                                <!--<div class="n-masthead__property-moniker"><div>Support</div></div> -->
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col">
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                </div>
+                <div class="row top-hat">
+                    <div class="col-md-6">
+                        <h1 class="page-title">Component Document Maker</h1>
+                    </div>
+                    <div class="col">
+                    </div>
+                    <div class="col">
+                    </div>
+                </div>
+            </section>
+            <div id="page">
+                <div id="message">
+                    <h4 id="main-heading"></h4>
+                    <p id="main-paragraph"></p>
+                    
+                </div>
+                <div class = "download-container">
+                    <h6 id ="loader-heading"></h6>
+                </div>
+                
+                <div class="loader">
+                    
+                    <i class="loader__tile loader__tile__1"></i>
+                    <i class="loader__tile loader__tile__2"></i>
+                    <i class="loader__tile loader__tile__3"></i>
+                    <i class="loader__tile loader__tile__4"></i>
+                    <i class="loader__tile loader__tile__5"></i>
+                    <i class="loader__tile loader__tile__6"></i>
+                    <i class="loader__tile loader__tile__7"></i>
+                    <i class="loader__tile loader__tile__8"></i>
+                    <i class="loader__tile loader__tile__9"></i>
+                </div>
+                <div class="container" id="bottom-section">
+                    <div class="col">
+                    </div>
+                    <div class="col">
+                        <button id="download-btn" type="button" class="btn btn-primary" disabled = "true">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-download" viewBox="0 0 16 16">
+                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z">
+                                </path>
+                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z">
+                                </path>
+                            </svg> Download
+                        </button>
+                    </div>
+                    <div class="col">
+                        <p id="processing-message"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="filler">
+            </div>
+            <section class="footer">
+                <div class="row footer-container">
+                    <div class="col">
+                        <p>© 2022 NetApp</p>
+                    </div>
+                    <div class="col">
+                    </div>
+                    <div class="col">
+                        <p><a href="https://form.asana.com/?k=fUzb6bWTy8ZULM9YR8l-fg&d=9031689333149" target="_blank"
+                                rel="noopener">Feedback</a></p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </body>   
+    <script src="popup.js"></script>
+
+</html>
