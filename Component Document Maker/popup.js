@@ -6,6 +6,11 @@ var query = {
 var reviewDomain = "https://ntapwwwprodstage-web9.azurewebsites.net";
 //this runs the function on popup open
 chrome.tabs.query(query, callback);
+
+//this is a list of components that we will build html for. 
+//We use postion [x][0] for the component name
+//[x][1] is the file name
+//[x][2] is the component html tag name
 var listOfComponents = [
     ['Accordions', 'Accordions.html', 'n-accordion-band', ''],
     ['Back to Top', 'Back_to_Top.html', 'n-back-to-top', ''],
@@ -22,6 +27,7 @@ var listOfComponents = [
     ['Offset Cards', 'Offset_Cards.html', 'n-offset-cards', ''],
     ['Page Component', 'Page_Component.html', 'n-page', ''],
     ['Page Guidelines', 'Page_Guidelines.html', 'n-page-guidelines', ''],
+    ['Press Release Article', 'Press_Release_Article.html', 'n-press-release-article', ''],
     ['Product Comparison Table', 'Product_Comparison_Table.html', 'n-product-comparison-table', ''],
     ['Prose Author Bio', 'Prose_Author_Bio.html', 'n-prose-author-bio', ''],
     ['Prose Block Quote', 'Prose_Block_Quote.html', 'n-prose-block-quote', ''],
@@ -52,9 +58,12 @@ var listOfComponents = [
     ['', 'Page_Component.html', 'n-prose-main', ''],
     ['', 'Page_Component.html', 'n-prose-full-width', '']
 ]
-
-var listOfTcmIDs = [
-    //Level Number, Local TCM#, Global TCM#
+//this is a list of TCM ids and names for there corresponding levels in the CMS hierarchy
+//[x][0] Component name for the level
+//[x][1] Component number for the page level in the TCM id
+//[x][2] Component number for the Component level in the TCM id
+//[x][3] Component name for the Component level in the TCM id
+var listOfTcmIDs = [    
     ['040', '19', '4', '020C'],
     ['050 NL', '20', '15', '030C NL'],
     ['050 JA', '22', '16', '030C JA'],
@@ -715,9 +724,12 @@ function buildPageComponentHtml(htmlObject) {
             pageComponentHtml += proseEventCard(pageComponents[i]);
         }
 
-        //
         if (pageComponents[i].localName == "n-prose-full-width") {
             pageComponentHtml += buildProseFullWidth(pageComponents[i]);
+        }
+
+        if(pageComponents[i].localName == "n-press-release-article") {
+            pageComponentHtml += buildPressReleaseArticle(pageComponents[i]);
         }
 
     }
@@ -750,40 +762,40 @@ function cleanUpHtml(pageComponentHtml) {
 //this function will get the first comment for the giving object, and return the name of the Id requested.
 function getCommentInfoFrom(htmlObject, nameOfId) {
     var tcmId = "";
-    var comments = getComments(htmlObject);
+    var comments = getComments(htmlObject);    
 
     //this section is needed because customer story components place there tcm ids in the parents comment.
-    
+    //So we will check parent nodes for comments, and try to get a TCM id form there.    
     if (comments.length === 0) {
         comments = getComments(htmlObject.parentNode);
     }
     if (comments.length === 0) {
         comments = getComments(htmlObject.parentNode.parentNode);
-    }  
-    
+    }    
     
     for (var i = 0; i < comments.length; i++) {
         var breakThisLoop = false;
         var currentComment = comments[i].data;
-        currentComment = currentComment.substring(currentComment.indexOf("{"));
-        //console.log('current index of {: ');
-        //console.log(currentComment.indexOf('{'));
-        if (currentComment.indexOf('{') != 0) {
-            continue;
+        currentComment = currentComment.substring(currentComment.indexOf("{"));        
+        
+       
+        //if we do not have a valid comment with json in it, we want to skip this comment.
+        if(isJsonString(currentComment)==false){
+        break;
         }
-        //console.log("currentComment: ");
-        //console.log(currentComment);
-        const currentCommentObject = JSON.parse(currentComment, function (key, value) {
-            if (key == nameOfId) {
-                tcmId = value;
+
+        //this will take the current comment, check to see if it contains any key that matches the nameOfId
+        //if it dose, we will then return that value from the comment.
+        JSON.parse(currentComment, function (key, value) {            
+            if (key == nameOfId) {                
+                tcmId = value;                
                 breakThisLoop = true;
             }
             return value;
         });
-        //console.log(currentCommentObject);
 
 
-
+        //if we have found the id we want, we can break out of the loop.
         if (breakThisLoop == true) {
             break;
         }
@@ -793,6 +805,17 @@ function getCommentInfoFrom(htmlObject, nameOfId) {
 
 }
 
+//check if we have a valir json string
+function isJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
+//this function will get all the comments for the giving object and return it in a object array.
 function getComments(htmlObject) {
     var comments = [];
     $(htmlObject).contents().filter(function () {
@@ -805,6 +828,7 @@ function getComments(htmlObject) {
     return comments;
 }
 
+//this function will create cms html links for a giving tcmID with a date modified provided
 function appendCmsInfo(tcmID, componentModDate) {
     var appendingHtml = "";
     var cmsLinkSection = "<p id='cms-link' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>CMS link(s):<br> " + createCmsLinks(tcmID) + "<span style='color: black;'></span></em></p>";
@@ -829,7 +853,7 @@ function getBase64Image(img) {
     return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
 }
 
-
+//this function will create html for a given image object that we can then insert into a html page
 function createImageHtml(imageObject) {
     //console.log("imageObject: ");
     //console.log(imageObject);
@@ -862,6 +886,7 @@ function createImageHtml(imageObject) {
     return imageHtml;
 }
 
+//this function will create CMS links for a giving tcmID for a component. Based on the TCM id level, it will produce the proper links.
 function createCmsLinks(tcmID) {
     var tcmLinks = "";
     //this is the tcm number for the level it is on
@@ -907,6 +932,7 @@ function createCmsLinks(tcmID) {
     return tcmLinks;
 }
 
+//tables in word when converted from HTMl do no put borders on the table. This funciton will add boarders to any table tag in a given html object
 function formatInLineTable(object) {
     $(object).find("img").removeAttr("width");
     $(object).find("img").attr("width", "640px");
@@ -1855,6 +1881,68 @@ function buildOffSetCards(currentComponent) {
     }
 
     return tempObject.innerHTML;
+}
+
+function buildPressReleaseArticle(currentComponent) {
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = getComponentHtml("n-press-release-article");
+    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
+    var rtf = $(currentComponent).find("n-press-release-article-contact").find("n-richtext");
+    var subheading = $(currentComponent).find("p.n-article-subheading");
+    //these selctors one is for old articles, the other is for new articles
+    var body = $(currentComponent).find("n-press-release-article-main > n-content > article > n-content > n-richtext, n-press-release-article-main > n-content > article > n-content > div");
+    //this location currently wont return an acurate value
+    var location = $(currentComponent).find("n-content > div > p:nth-child(1) > strong");
+    var titleComponent = $(currentComponent.parentNode).find("n-title");
+
+    if(typeof rtf[0] !== 'undefined'){
+        $(tempObject).find("#rtf").html(rtf[0].innerHTML);
+    }
+
+    if(typeof subheading[0] !== 'undefined'){
+        $(tempObject).find("#a1-subheading").html(subheading[0].innerHTML);
+    }
+
+    if(typeof body[0] !== 'undefined'){
+        $(tempObject).find("#a1-body").html(body[0].innerHTML);
+    }
+
+    if(typeof titleComponent[0] !== 'undefined'){
+        var theme = $(titleComponent[0]).attr('n-theme');
+        var headline = $(titleComponent[0]).find("h1");
+        var images = $(titleComponent[0]).find("n-secondary > img");
+    
+        var eyeBrow = $(titleComponent[0]).find("n-eyebrow > a.eyebrow");
+    
+        //this section dosent need to be here because press release articles dont have a theme, but if they get added later, this will be needed
+        if (typeof eyeBrow[0] !== "undefined" && eyeBrow[0].innerHTML != "") {
+            var eyeBrowSection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Eyebrow CTA]</strong></p>" +
+                "<p id = 'a1-cta-eye' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
+                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Eyebrow Link]</strong></p>" +
+                "<p id = 'a1-link-eye' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>";
+            $(tempObject).find("#page-content").before(eyeBrowSection);
+            $(tempObject).find("#a1-cta-eye").html(createLinkData(eyeBrow[0], "linkText"));
+            $(tempObject).find("#a1-link-eye").html(createLinkData(eyeBrow[0], "link"));
+    
+        }
+    
+        if (typeof theme !== "undefined") {
+            $(tempObject).find("#theme").html("Theme: " + theme);
+        }
+    
+        if (typeof headline[0] !== "undefined") {
+            $(tempObject).find("#a1-h1").html(headline[0].innerHTML);
+        }
+        if (typeof images[0] !== 'undefined') {
+            $(tempObject).find("#a1-image-source").html((createImageHtml(images[0])));
+            $(tempObject).find("#a1-image-alt-text").html(images[0].alt);
+        }
+    }
+
+    
+    return tempObject.innerHTML;
+
+
 }
 
 function buildProductComparisonTable(currentComponent) {
