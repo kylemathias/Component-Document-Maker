@@ -223,8 +223,7 @@
      cursor: not-allowed;     
  }
 
- .btn-primary:disabled
-    {
+ .btn-primary:disabled {
         color: black;
         opacity: 0.50;
         background-color: #A2AAAD;
@@ -232,11 +231,17 @@
         border-radius: 0%;
     }
 
-.btn-primary{
+.btn-primary {
     color:#101820;
     background-color: #65d097;
     border-color: #65d097;
     border-radius: 0%;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #5CC4FF;
+    border-color: #BBE5FF;
+    color: #000;    
 }
 
  .form-control {
