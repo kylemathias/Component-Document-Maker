@@ -189,9 +189,11 @@ function callback(tabs) {
     quickWire.innerHTML = "Quickwires";
 
     if (currentTab.url.startsWith("https://ntapwwwprodstage-web9.azurewebsites.net/") != true && currentTab.url.startsWith("https://www.netapp.com/") != true) {
+        
+        //to do
+        replaceButtonWIthLink(reviewDomain, " Review");
+        setMessage("To Get Started", "To use this extension, please navigate to NetApp.com's " + reviewUrl.outerHTML + " or to create a new page use this extension on our mock up tool " + quickWire.outerHTML + " <sup>™</sup>", "Navigate to Review");
         stopLoader();
-
-        setMessage("To Get Started", "To use this extension, please navigate to NetApp.com's " + reviewUrl.outerHTML + " or to create a new page use this extension on our mock up tool " + quickWire.outerHTML + " <sup>™</sup>", "Disabled");
 
     } else {
         if (currentTab.url.startsWith("https://www.netapp.com/")) {
@@ -203,7 +205,8 @@ function callback(tabs) {
             pageLink.innerHTML = "Review Link";
             pageLink.href = reviewUrl;
             //console.log(pageLink.outerHTML);
-            setMessage("We are on the Live Site", "You are on the live site of netapp.com. If you would like to get a Word document version of this page, you can do so at this " + pageLink.outerHTML + " or to create a new page use this extension on our mock up tool " + quickWire.outerHTML + " <sup>™</sup>", "Disabled");
+            replaceButtonWIthLink(reviewDomain, " Review");
+            setMessage("We are on the Live Site", "You are on the live site of netapp.com. If you would like to get a Word document version of this page, you can do so at this " + pageLink.outerHTML + " or to create a new page use this extension on our mock up tool " + quickWire.outerHTML + " <sup>™</sup>", "Navigate to Review");
         }
         var components = currentTab.url.split("#"); //get the string after "#" in the URL    
         if (currentTab.url.startsWith("https://ntapwwwprodstage-web9.azurewebsites.net/quickwires.html")) {
@@ -231,6 +234,18 @@ function callback(tabs) {
     }
 
 
+}
+function replaceButtonWIthLink(link, buttonText) {
+    var svgArrowRigth = "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' class='bi bi-box-arrow-in-right' viewBox='0 0 16 16'>"+
+    "  <path fill-rule='evenodd' d='M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0v-2z'/>"+
+    "  <path fill-rule='evenodd' d='M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a;5.5 0 0 0 .708.708l3-3z'/>"+
+    "</svg>";
+
+    document.getElementById("download-btn").innerHTML = buttonText + svgArrowRigth;
+    document.getElementById("download-btn").addEventListener("click", function () {
+        window.open(link);
+    });
+    document.getElementById("download-btn").removeAttribute("disabled");
 }
 
 function setMessage(heading, parapgraph, loaderHeading) {
