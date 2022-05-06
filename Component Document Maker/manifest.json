@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Component Document Maker",
-    "version": "2.3.3",
+    "version": "2.3.4",
     "description": "Generate a component word document for a given NetApp.com review page.",
     "icons": {
         "16": "/media/thumb2.png",

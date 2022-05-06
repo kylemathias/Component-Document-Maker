@@ -776,16 +776,20 @@ function cleanUpHtml(pageComponentHtml) {
 //this function will get the first comment for the giving object, and return the name of the Id requested.
 function getCommentInfoFrom(htmlObject, nameOfId) {
     var tcmId = "";
-    var comments = getComments(htmlObject);    
+    var comments = getComments(htmlObject);   
 
     //this section is needed because customer story components place there tcm ids in the parents comment.
-    //So we will check parent nodes for comments, and try to get a TCM id form there.    
+    //So we will check parent nodes for comments, and try to get a TCM id form there.
+    if(typeof htmlObject.length>0) {    
     if (comments.length === 0) {
+        if(typeof htmlObject.parentNode !== "undefined") {
         comments = getComments(htmlObject.parentNode);
+        }
     }
-    if (comments.length === 0) {
-        comments = getComments(htmlObject.parentNode.parentNode);
-    }    
+    if (comments.length === 0) {              
+        comments = getComments(htmlObject.parentNode.parentNode);        
+    } 
+}   
     
     for (var i = 0; i < comments.length; i++) {
         var breakThisLoop = false;
@@ -1464,6 +1468,13 @@ function buildImageWithTabs(currentComponent) {
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
     $(tempObject).find("#delete-for-content").remove();
 
+    var image = $(currentComponent).find("img");
+
+    if (typeof image[0] !== 'undefined') {
+        $(tempObject).find("#a1-image-source").html((createImageHtml(image[0])));
+        $(tempObject).find("#a1-image-alt-text").html(image[0].alt);
+    }
+
     var tabs = $(currentComponent).find("n-primary > article > div.tab-content-container");
     //console.log(tabs);
     var makeThisManyTabs = 0;
@@ -1479,11 +1490,24 @@ function buildImageWithTabs(currentComponent) {
             "<td style='width: 151.45pt; border: solid windowtext 1.0pt; border-top: none; background: #E7E6E6; padding: 0in 0in 0in 0in;' valign='top'>" +
             "<p style='margin: 0in; text-align: center; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em><span style='color: black;'>Tab " + (i + 1) + "</span></em></p>" +
             "</td>" +
+            "</tr>" +           
+            "<tr  style='height: 16.55pt;'>" +
+            "<td style='width: 151.45pt; border: solid windowtext 1.0pt; border-top: none; background: #E7E6E6; padding: 0in 0in 0in 0in;' valign='top'>" +
+            "<p style='margin: 0in; text-align: center; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em><span style='color: black;'>Tab Title</span></em></p>" +
+            "</td>            " +
+            "</tr>" +
+            "<tr style='height: 16.55pt;'>" +
+            "<td style='width: 620px; border-color: currentcolor black black; border-style: none solid solid; border-width: medium 1pt 1pt; border-image: none 100% / 1 / 0 stretch; padding: 0in;' valign='top'>" +
+            "<p id= 'tab-title-" + (i + 1) + "' style='margin-right:0in;margin-left:0in;font-size:16px;font-family:Times New Roman,serif;margin:0in;'><em><span style='font-size:15px;font-family:Calibri,sans-serif;color:gray;'></span></em><span style='font-size:15px;font-family:  Calibri,sans-serif;color:gray;'>&nbsp;</span></p>                                               " +
+            "</td>" +
+            "</tr>" +
+            "<tr style='height: 16px;'>" +
+            "<td style='width: 620px; border-color: currentcolor black black; border-style: none solid solid; border-width: medium 1pt 1pt; border-image: none 100% / 1 / 0 stretch; background: none 0% 0% repeat scroll #e7e6e6; padding: 0in; height: 16px;' valign='top'>" +
+            "<p style='margin: 0in; text-align: center; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em><span style='color: black;'>Heading/Copy/Call to Action</span></em></p>" +
+            "</td>" +
             "</tr>" +
             "<tr style='height: 34.45pt;'>" +
-            "<td id='page-section-" + (i + 1) + "' style='width: 151.45pt; border: solid windowtext 1.0pt; border-top: none; padding: 0in 0in 0in 0in;' valign='top'>" +
-            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Tab title]&nbsp;</strong></p>" +
-            "<p id = 'a" + (i + 1) + "-tt'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>" +
+            "<td id='page-section-" + (i + 1) + "' style='width: 151.45pt; border: solid windowtext 1.0pt; border-top: none; padding: 0in 0in 0in 0in;' valign='top'>" +            
             "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Headline]&nbsp;</strong></p>" +
             "<p id = 'a" + (i + 1) + "-h1'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>                " +
             "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Body]</strong></p>" +
@@ -1508,7 +1532,6 @@ function buildImageWithTabs(currentComponent) {
         var tabTitle = $(tabs[i].parentElement).attr("data-tab-title");
         //console.log("tabTitle");
         //console.log(tabTitle);
-        var images = $(tabs[i]).find("n-xpm-image > img");
         var eyeBrow = $(tabs[i]).find("n-eyebrow > a.eyebrow");
 
         if (typeof eyeBrow[0] !== "undefined" && eyeBrow[0].innerHTML != "") {
@@ -1526,14 +1549,11 @@ function buildImageWithTabs(currentComponent) {
 
         //if we find more than 3 accordions, we need to add a new section to the html document
         if (typeof tabTitle !== "undefined") {
-            $(tempObject).find("#a" + (i + 1) + "-tt").html(tabTitle);
+            $(tempObject).find("#tab-title-" + (i + 1)).html(tabTitle);
         }
 
 
-        if (typeof images[0] !== 'undefined') {
-            $(tempObject).find("#a" + (i + 1) + "-image-source").html((createImageHtml(images[0])));
-            $(tempObject).find("#a" + (i + 1) + "-image-alt-text").html(images[0].alt);
-        }
+       
 
         if (typeof headline[0] !== 'undefined') {
             $(tempObject).find("#a" + (i + 1) + "-h1").html(headline[0].innerHTML);
