@@ -7,7 +7,7 @@
 3. [Another paragraph](#paragraph2)
 
 ## Introduction <a name="introduction"></a>
-This Chrome extention
+This Chrome extention will create a .doc file from components from a users current tab
 
 ## Getting Started <a name="paragraph1"></a>
 The first paragraph text
