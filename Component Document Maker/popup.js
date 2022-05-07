@@ -965,6 +965,7 @@ function buildAccordionBandHtml(currentComponent) {
 
     //add cms info to the word dock html
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
+    $(tempObject).find("#delete-for-content").remove();
 
     var naccordions = $(currentComponent).find("div.n-accordions");
 
@@ -972,33 +973,21 @@ function buildAccordionBandHtml(currentComponent) {
         //get the content we need
         var headline = $(naccordions[i]).find("span.n-accordion-title");
         var subhead = $(naccordions[i]).find("span.n-accordion-subheader");
-        var body = $(naccordions[i]).find("n-xpm-richtext");
-        var cta = $(naccordions[i]).find("a.cta");
+        var bodyAndCTA = $(naccordions[i]).find("n-xpm-richtext, a.cta");        
 
         //if we find more than 3 accordions, we need to add a new section to the html document
-        if (i > 2) {
+        
             var accordionSection = "<tr>" +
                 "<td style='width: 467.2pt; border: solid black 1.0pt; border-top: none; background: #E7E6E6; padding: 0in 0in 0in 0in;' valign='top'>\n" +
                 "<p style='margin: 0in; text-align: center; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em><span style='color: black;'>Accordion " + (i + 1) + "</span></em></p>\n" +
                 "</td>" +
                 "</tr>" +
                 "<tr style='height: 54.6pt;'>" +
-                "<td style='width: 467.2pt; border: solid black 1.0pt; border-top: none; padding: 0in 0in 0in 0in;' valign='top'>" +
+                "<td id ='accordion-" + (i + 1) + "' style='width: 467.2pt; border: solid black 1.0pt; border-top: none; padding: 0in 0in 0in 0in;' valign='top'>" +
                 "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Headline]&nbsp;</strong></p>" +
                 "<p id = 'a" + (i + 1) + "-h1'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>" +
                 "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Sub-head]&nbsp;</strong></p>" +
-                "<p id = 'a" + (i + 1) + "-sh1'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>" +
-                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Body]</strong></p>" +
-                "<p id = 'a" + (i + 1) + "-body' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>" +
-                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>" +
-                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[CTA 1]</strong></p>" +
-                "<p id = 'a" + (i + 1) + "-cta1'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
-                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Link 1]</strong></p>" +
-                "<p id = 'a" + (i + 1) + "-link1' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
-                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[CTA 2]</strong></p>" +
-                "<p id = 'a" + (i + 1) + "-cta2' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
-                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Link 2]</strong></p>" +
-                "<p id = 'a" + (i + 1) + "-link2' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
+                "<p id = 'a" + (i + 1) + "-sh1'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>" +             
                 "</td>" +
                 "</tr>" +
                 "<tr style='height: 12.75pt;'>" +
@@ -1020,7 +1009,7 @@ function buildAccordionBandHtml(currentComponent) {
 
             $(tempObject).find("#append-tag").append(accordionSection);
 
-        }
+        
 
         if (typeof headline[0] !== 'undefined') {
             $(tempObject).find("#a" + (i + 1) + "-h1").html(headline[0].innerHTML);
@@ -1029,20 +1018,31 @@ function buildAccordionBandHtml(currentComponent) {
         if (typeof subhead[0] !== 'undefined') {
             $(tempObject).find("#a" + (i + 1) + "-sh1").html(subhead[0].innerHTML);
         }
+        var ctaCount = 0;
+        var bodyCount = 0;
 
-        if (typeof body[0] !== 'undefined') {
-            $(tempObject).find("#a" + (i + 1) + "-body").html(body[0].innerHTML);
-        }
+        for(var j=0; j<bodyAndCTA.length; j++){
+            if(bodyAndCTA[j].localName == "n-xpm-richtext"){
+                bodyCount++;
+               var bodySection =  "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Body]</strong></p>" +
+                "<p id = 'a" + (i + 1) + "-body-"+bodyCount+"' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>";
+                $(tempObject).find('#accordion-' + (i + 1)).append(bodySection);
+                $(tempObject).find("#a" + (i + 1) + "-body-" + bodyCount).html(formatInLineTable(bodyAndCTA[j]).innerHTML);
+            }
 
-        if (typeof cta[0] !== 'undefined') {
-            $(tempObject).find("#a" + (i + 1) + "-cta1").html(createLinkData(cta[0], "linkText"));
-            $(tempObject).find("#a" + (i + 1) + "-link1").html(createLinkData(cta[0], "link"));
-        }
+            if(bodyAndCTA[j].localName == "a"){
+                ctaCount++;
+                var ctaSection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[CTA " + ctaCount + "]</strong></p>" +
+                "<p id = 'a" + (i + 1) + "-cta" + ctaCount + "'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
+                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Link " +ctaCount + "]</strong></p>" +
+                "<p id = 'a" + (i + 1) + "-link" + ctaCount + "' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>";
+                $(tempObject).find('#accordion-' + (i + 1)).append(ctaSection);
+                $(tempObject).find("#a" + (i + 1) + "-cta" + ctaCount).html(createLinkData(bodyAndCTA[j], "linkText"));
+                $(tempObject).find("#a" + (i + 1) + "-link" + ctaCount).html(createLinkData(bodyAndCTA[j], "link"));
+            }
 
-        if (typeof cta[1] !== 'undefined') {
-            $(tempObject).find("#a" + (i + 1) + "-cta2").html(createLinkData(cta[1], "linkText"));
-            $(tempObject).find("#a" + (i + 1) + "-link2").html(createLinkData(cta[1], "link"));
         }
+       
     }
 
 
