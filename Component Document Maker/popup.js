@@ -1,5 +1,3 @@
-const TestIntegrityLevel = require("es-abstract/2015/TestIntegrityLevel");
-
 console.log("this is popup.js");
 var query = {
     active: true,
