@@ -1,3 +1,5 @@
+const TestIntegrityLevel = require("es-abstract/2015/TestIntegrityLevel");
+
 console.log("this is popup.js");
 var query = {
     active: true,
@@ -205,7 +207,7 @@ function callback(tabs) {
             pageLink.innerHTML = "Review Link";
             pageLink.href = reviewUrl;
             //console.log(pageLink.outerHTML);
-            replaceButtonWIthLink(reviewDomain, " Review");
+            replaceButtonWIthLink(reviewUrl, " Review");
             setMessage("We are on the Live Site", "You are on the live site of netapp.com. If you would like to get a Word document version of this page, you can do so at this " + pageLink.outerHTML + " or to create a new page use this extension on our mock up tool " + quickWire.outerHTML + " <sup>™</sup>", "Navigate to Review");
         }
         var components = currentTab.url.split("#"); //get the string after "#" in the URL    
