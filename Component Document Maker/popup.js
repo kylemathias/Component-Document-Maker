@@ -93,7 +93,7 @@ if (componentSearchString.charAt(componentSearchString.length - 1) === ",") {
 //console.log(componentSearchString);
 
 //this function populate the list of components with corresponding html
-//it then proceeds to call the function related to what url is currently open
+//it then proceeds to call the function related to what url is currently open in the user's current tab
 function addComponentsHtmlToArray(currentTab) {
     var client = new XMLHttpRequest();
     for (i = 0; i < listOfComponents.length; i++) {
@@ -717,7 +717,7 @@ function buildPageComponentHtml(htmlObject) {
             pageComponentHtml += buildProseRightAside(pageComponents[i]);
         }
 
-        if (pageComponents[i].localName == "n-prose-segment" && $(pageComponents[i]).attr("data-ntap-analytics-region") == "ProseRegionArticle") {
+        if ((pageComponents[i].localName == "n-prose-segment" && $(pageComponents[i]).attr("data-ntap-analytics-region") == "ProseRegionArticle") || (pageComponents[i].localName == "n-prose-segment" && pageComponents[i].firstElementChild.localName == "n-xpm-eyebrow")) {
             pageComponentHtml += buildProseArticle(pageComponents[i]);
         }
         if (pageComponents[i].localName == "n-prose-listicle") {
@@ -2028,8 +2028,8 @@ function buildQuoteBand(currentComponent) {
     tempObject.innerHTML = getComponentHtml("n-quote-band");
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
 
-    var headline = $(currentComponent).find(" n-primary > n-content > blockquote > h2");
-    var body = $(currentComponent).find(" n-primary > n-content > blockquote > p");
+    var headline = $(currentComponent).find("n-primary > n-content > blockquote > h2");
+    var body = $(currentComponent).find("n-primary > n-content > blockquote > p, n-primary > n-content > blockquote > div");
     var cta = $(currentComponent).find("n-button-group").find("a.cta");
     var images = $(currentComponent).find("n-secondary-image > img");
     var logoImage = $(currentComponent).find("n-primary > n-content > p > img");
@@ -2059,7 +2059,12 @@ function buildQuoteBand(currentComponent) {
     }
 
     if (typeof body[0] !== 'undefined') {
-        $(tempObject).find("#a1-body").html(body[0].innerHTML);
+        var bodyText = "";
+        //there are imported customer stories, this loop will combine innner text of all paragraphs into one string
+        for(var i = 0; i < body.length; i++) {
+            bodyText += body[i].innerHTML;
+        }
+        $(tempObject).find("#a1-body").html(bodyText);
     }
 
     if (typeof cta[0] !== 'undefined') {
@@ -2978,12 +2983,14 @@ function buildProseRightAside(currentProseRightAside) {
     return proseRightHTML;
 }
 
+//no longer used. Kept for reference
 function buildProseMain(currentProseMain) {
-    var proseMainItems = $(currentProseMain).find("n-prose-segment[data-ntap-analytics-region='ProseRegionArticle'], n-prose-listicle, n-prose-inline-media, n-prose-author-bio, n-prose-event-card");
+    var proseMainItems = $(currentProseMain).find("n-prose-segment, n-prose-listicle, n-prose-inline-media, n-prose-author-bio, n-prose-event-card");
     var proseMainHTML = "";
 
     for (var i = 0; i < proseMainItems.length; i++) {
-        if (proseMainItems[i].localName == "n-prose-segment" && $(proseMainItems[i]).attr("data-ntap-analytics-region") == "ProseRegionArticle") {
+        console.log(proseMainItems[i]);
+        if ((proseMainItems[i].localName == "n-prose-segment" && $(proseMainItems[i]).attr("data-ntap-analytics-region") == "ProseRegionArticle") || (proseMainItems[i].localName == "n-prose-segment" && proseMainItems[i].firstElementChild.localName == "n-xpm-eyebrow") ) {
             proseMainHTML += buildProseArticle(proseMainItems[i]);
         }
         if (proseMainItems[i].localName == "n-prose-listicle") {
@@ -3198,7 +3205,8 @@ function buildProseArticle(currentProseSegment) {
     $(tempObject).find("#page-content").html("");
 
     var getContentElements = $(currentProseSegment).children("n-xpm-eyebrow, h2, h3, n-xpm-richtext, n-button-group");
-    console.log(getContentElements);
+    getContentElements = getContentElements.add($(currentProseSegment).find("article > h2, article > h3, article > n-xpm-richtext, article > n-button-group"));
+  
 
     var bodyCount = 0;
     var mainHeadingCount = 0;
