@@ -27,6 +27,7 @@ var listOfComponents = [
     ['Offset Cards', 'Offset_Cards.html', 'n-offset-cards', ''],
     ['Page Component', 'Page_Component.html', 'n-page', ''],
     ['Page Guidelines', 'Page_Guidelines.html', 'n-page-guidelines', ''],
+    ['Partner Connect', 'Partner_Connect_Template.html', 'n-partner-detail-region', ''],
     ['Press Release Article', 'Press_Release_Article.html', 'n-press-release-article', ''],
     ['Product Comparison Table', 'Product_Comparison_Table.html', 'n-product-comparison-table', ''],
     ['Prose Author Bio', 'Prose_Author_Bio.html', 'n-prose-author-bio', ''],
@@ -744,6 +745,10 @@ function buildPageComponentHtml(htmlObject) {
 
         if(pageComponents[i].localName == "n-press-release-article") {
             pageComponentHtml += buildPressReleaseArticle(pageComponents[i]);
+        }
+
+        if(pageComponents[i].localName == "n-partner-detail-region") {
+            pageComponentHtml += buildPartnerDetailRegion(pageComponents[i]);
         }
 
     }
@@ -3582,4 +3587,18 @@ function proseRegionTwo(currentComponent) {
     }
 
 
+}
+
+function buildPartnerDetailRegion(currentComponent){
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = getComponentHtml('n-partner-detail-region');
+
+    var partnerName = $(currentComponent).find("n-partner-summary-region > section > n-partner-description > h1");
+    console.log(partnerName);
+
+    if(typeof partnerName[0] !== 'undefined'){
+        $(tempObject).find("#partner-name").html(partnerName[0].innerHTML);
+    }
+
+    return tempObject.innerHTML;
 }
