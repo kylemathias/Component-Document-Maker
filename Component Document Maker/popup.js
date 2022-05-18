@@ -3592,6 +3592,8 @@ function proseRegionTwo(currentComponent) {
 function buildPartnerDetailRegion(currentComponent){
     var tempObject = document.createElement("div");
     tempObject.innerHTML = getComponentHtml('n-partner-detail-region');
+    var body = $(currentComponent).find("n-xpm-richtext")
+    console.log(body)
 
     var partnerName = $(currentComponent).find("n-partner-summary-region > section > n-partner-description > h1");
     console.log(partnerName);
@@ -3599,6 +3601,10 @@ function buildPartnerDetailRegion(currentComponent){
     if(typeof partnerName[0] !== 'undefined'){
         $(tempObject).find("#partner-name").html(partnerName[0].innerHTML);
     }
+    if(typeof body[0] !== 'undefined'){
+        $(tempObject).find("#body").html(body[0].innerHTML)
+    }
 
     return tempObject.innerHTML;
 }
+
