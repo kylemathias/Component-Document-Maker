@@ -115,10 +115,10 @@ function addComponentsHtmlToArray(currentTab) {
                         console.log("Loaded.");
 
                         //after components are loaded into the array, what function do we want to call?
-                        if (currentTab.url.startsWith("https://ntapwwwprodstage-web9.azurewebsites.net/quickwires.html")) {
+                        if (currentTab.url.startsWith("https://ntapwwwprodstage-web9.azurewebsites.net/quickwires.html") || currentTab.url.startsWith("https://ntapwwwtest-web9.azurewebsites.net/quickwires.html")) {
                             findComponentsInURL(currentTab);
                         } else {
-                            if (currentTab.url.startsWith("https://ntapwwwprodstage-web9.azurewebsites.net/")) {
+                            if (currentTab.url.startsWith("https://ntapwwwprodstage-web9.azurewebsites.net/") || currentTab.url.startsWith("https://ntapwwwtest-web9.azurewebsites.net/")) {
                                 $.get(currentTab.url, function (data) {
                                     //console.log(data);
                                     generateReviewHtml(data, currentTab);
@@ -188,7 +188,7 @@ function callback(tabs) {
     quickWire.target = "_blank";
     quickWire.innerHTML = "Quickwires";
 
-    if (currentTab.url.startsWith("https://ntapwwwprodstage-web9.azurewebsites.net/") != true && currentTab.url.startsWith("https://www.netapp.com/") != true) {
+    if (currentTab.url.startsWith("https://ntapwwwprodstage-web9.azurewebsites.net/") != true && currentTab.url.startsWith("https://ntapwwwtest-web9.azurewebsites.net/") != true && currentTab.url.startsWith("https://www.netapp.com/") != true) {
         
         //to do
         replaceButtonWIthLink(reviewDomain, " Review ");
@@ -209,11 +209,11 @@ function callback(tabs) {
             setMessage("We are on the Live Site", "You are on the live site of netapp.com. If you would like to get a Word document version of this page, you can do so at this " + pageLink.outerHTML + " or to create a new page use this extension on our mock up tool " + quickWire.outerHTML + " <sup>™</sup>", "Navigate to Review");
         }
         var components = currentTab.url.split("#"); //get the string after "#" in the URL    
-        if (currentTab.url.startsWith("https://ntapwwwprodstage-web9.azurewebsites.net/quickwires.html")) {
+        if (currentTab.url.startsWith("https://ntapwwwprodstage-web9.azurewebsites.net/quickwires.html")|| currentTab.url.startsWith("https://ntapwwwtest-web9.azurewebsites.net/quickwires.html")) {
             setMessage("We are on the Quickwires<sup>™</sup> page", "Your document is being generated and will be available to download shortly.", "Generating Document...");
             addComponentsHtmlToArray(currentTab);
         } else {
-            if (currentTab.url.startsWith("https://ntapwwwprodstage-web9.azurewebsites.net/")) {
+            if (currentTab.url.startsWith("https://ntapwwwprodstage-web9.azurewebsites.net/") || currentTab.url.startsWith("https://ntapwwwtest-web9.azurewebsites.net/")) {
                 setMessage("We Are On a Stage Page", "Your document is being generated and will be available to download shortly.", "Generating Document...");
                 addComponentsHtmlToArray(currentTab);
             }
@@ -314,7 +314,7 @@ function buildQuickWiresHtml(components) {
     }
     tempDiv.innerHTML = wordDocHtml;
     //$(tempDiv).find("table").attr("style", "border: 4px solid green;");
-    tempDiv = addNewBorder(tempDiv);
+    //tempDiv = addNewBorder(tempDiv);
 
 
     //add download function
