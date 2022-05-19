@@ -3,10 +3,21 @@ var query = {
     active: true,
     currentWindow: true
 };
+
+//add current mainfest version number to the page
+function addVersionNumber() {
+    var version = myVersion();
+    $('#version-number').html('<p class = "version-number">V ' + version + '</p>');
+}
+
+
 var reviewDomain = "https://ntapwwwprodstage-web9.azurewebsites.net";
 //this runs the function on popup open
 chrome.tabs.query(query, callback);
 
+function myVersion() {    
+    return chrome.runtime.getManifest().version;
+    }
 //this is a list of components that we will build html for. 
 //We use postion [x][0] for the component name
 //[x][1] is the file name
@@ -177,6 +188,7 @@ function download(filename, text) {
 var currentTab;
 //this will run if the popup is opened
 function callback(tabs) {
+    addVersionNumber();
     currentTab = tabs[0]; // there will be only one in this array
     console.log(currentTab); // also has properties like currentTab.id
     var reviewUrl = document.createElement('a');
@@ -302,6 +314,7 @@ function findComponentsInURL(currentTab) {
 
 function buildQuickWiresHtml(components) {
     var tempDiv = document.createElement("div");
+    wordDocHtml += getComponentHtml("n-page-guidelines");
     wordDocHtml += getComponentHtml("seo-url-breadcrumb");
     wordDocHtml += getComponentHtml("n-page");
 
@@ -313,7 +326,9 @@ function buildQuickWiresHtml(components) {
         }
 
     }
+    wordDocHtml += postPageContentAdd();
     tempDiv.innerHTML = wordDocHtml;
+    
     //$(tempDiv).find("table").attr("style", "border: 4px solid green;");
     //tempDiv = addNewBorder(tempDiv);
 
@@ -351,6 +366,7 @@ function generateReviewHtml(pageHtml, currentTab) {
     wordDocHtml += populateSEOhtml(htmlObject, currentTab);
     wordDocHtml += buildPageComponent(htmlObject, currentTab);
     wordDocHtml += buildPageComponentsHtml(htmlObject);
+    wordDocHtml += postPageContentAdd();
     //wordDocHtml += "</body></html>";
 
 
@@ -369,6 +385,7 @@ function generateReviewHtml(pageHtml, currentTab) {
 function generateDocumentName(htmlObject) {
     var documentName = "";
     var title = $(htmlObject).find("head > title");
+   
 
     if (typeof title[0] !== 'undefined') {
         var pageTitle = title[0].innerText.split("|");
@@ -380,6 +397,14 @@ function generateDocumentName(htmlObject) {
 
         documentName = tempALink.pathname;
     }
+
+    var createAlinkFromCurrentTabUrl = document.createElement("a");
+    createAlinkFromCurrentTabUrl.href = currentTab.url;
+    documentName = createAlinkFromCurrentTabUrl.pathname;
+    documentName = documentName.substring(1);
+    //replace all / with |
+    documentName = documentName.replace(/\//g, "|");
+    console.log(documentName);
     return documentName;
 
 }
@@ -780,6 +805,14 @@ function buildPageComponentsHtml(htmlObject) {
     pageComponentHtml = cleanUpHtml(pageComponentHtml);
 
     return pageComponentHtml;
+}
+
+function postPageContentAdd(){
+    var postPageHTML = "";
+    postPageHTML += "<p>Component Document Make Version Number: "+myVersion()+"</p>";
+
+    return postPageHTML;
+
 }
 
 function cleanUpHtml(pageComponentHtml) {
