@@ -465,11 +465,18 @@ function buildPageComponent(htmlObject, currentTab) {
         }else{
             locations = "A-Z Page Listing: No </br>";
         }
+        
 
         if(pageLocations.includes("Site Map")){
-            locations += "Site Map: Yes";
+            locations += "Site Map: Yes </br>";
         }else{
-            locations += "Site Map: No";
+            locations += "Site Map: No </br>";
+        }
+
+        if(pageLocations.includes("Personalization module")){
+            locations += "Personalization module: Yes";
+        }else{
+            locations += "Personalization module: No";
         }
         $(pageObject).find("#site-locations").html(locations);
     }
@@ -1088,9 +1095,15 @@ function buildCallOut(currentComponent) {
     tempObject.innerHTML = getComponentHtml("n-call-out");
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
 
-    var headline = $(currentComponent).find("n-secondary > n-content > h1");
-    var body = $(currentComponent).find("n-xpm-richtext");
+    var theme = $(currentComponent).attr('n-theme');
+    var headline = $(currentComponent).find("n-content > h1");
+    var body = $(currentComponent).find("n-content > n-xpm-richtext");
     var cta = $(currentComponent).find("a.cta");
+    
+
+    if (typeof theme !== "undefined") {
+        $(tempObject).find("#theme").html("Theme: " + theme);
+    }
 
     if (typeof headline[0] !== 'undefined') {
         $(tempObject).find("#a1-h1").html(headline[0].innerHTML);
@@ -1101,8 +1114,8 @@ function buildCallOut(currentComponent) {
     }
 
     if (typeof cta[0] !== 'undefined') {
-        $(tempObject).find("#a1-cta1").html(createLinkData(cta[0], "linkText"));
-        $(tempObject).find("#a1-link1").html(createLinkData(cta[0], "link"));
+        $(tempObject).find("#a1-cta1").html(createLinkData(cta[0], "linkText") +"</br>");
+        $(tempObject).find("#a1-link1").html(createLinkData(cta[0], "link")+"</br>");
     }
 
     if (typeof cta[1] !== 'undefined') {
