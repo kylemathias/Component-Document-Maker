@@ -349,8 +349,8 @@ function generateReviewHtml(pageHtml, currentTab) {
     //wordDocHtml += "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
     wordDocHtml += getComponentHtml("n-page-guidelines");
     wordDocHtml += populateSEOhtml(htmlObject, currentTab);
-    wordDocHtml += buildWebProdHtml(htmlObject, currentTab);
-    wordDocHtml += buildPageComponentHtml(htmlObject);
+    wordDocHtml += buildPageComponent(htmlObject, currentTab);
+    wordDocHtml += buildPageComponentsHtml(htmlObject);
     //wordDocHtml += "</body></html>";
 
 
@@ -435,11 +435,12 @@ function populateSEOhtml(htmlObject, currentTab) {
     return seoObject.innerHTML;
 }
 
-function buildWebProdHtml(htmlObject, currentTab) {
+function buildPageComponent(htmlObject, currentTab) {
     var pageObject = document.createElement('div');
     pageObject.innerHTML = getComponentHtml("n-page");
     var pageSEO = $(htmlObject).find("body");
     var breadCrumb = $(htmlObject).find("n-breadcrumb");
+    var siteLocations = $(htmlObject).find("meta[name='inputTo']");
 
     //create a link from the current tab
     var url = currentTab.url.replace("https://ntapwwwprodstage-web9.azurewebsites.net/", "https://www.netapp.com/");
@@ -456,6 +457,22 @@ function buildWebProdHtml(htmlObject, currentTab) {
     $(pageObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(pageSEO, "PageID"), toBrowserTime(getCommentInfoFrom(pageSEO, "PageModified"))));
     $(pageObject).find("#page-url").html(liveLink);
     $(pageObject).find("#stage-url").html(reviewLink);
+    if(typeof siteLocations[0] !== 'undefined'){
+        var locations = "";
+        var pageLocations = siteLocations[0].content;
+        if(pageLocations.includes("A-Z Listing")){
+            locations = "A-Z Page Listing: Yes </br>";
+        }else{
+            locations = "A-Z Page Listing: No </br>";
+        }
+
+        if(pageLocations.includes("Site Map")){
+            locations += "Site Map: Yes";
+        }else{
+            locations += "Site Map: No";
+        }
+        $(pageObject).find("#site-locations").html(locations);
+    }
 
     var metaTags = $(htmlObject).find("meta[property='article:tag'], meta[name='AssetType'], meta[name='AssetSubtype'], meta[name='AssetDescriptor'], meta[name='TargetAudience'], meta[name='BuyerStage'], meta[name='JobTitlesFunctions'], meta[name='Campaign'], meta[name='ProgramTopic'], meta[name='Event'], meta[name='EventDescriptor'], meta[name='SessionType'], meta[name='Department'], meta[name='Product'], meta[name='Services'], meta[name='Geo'], meta[name='GeoRegion'], meta[name='CountryRegion'], meta[name='Hyperscaler'], meta[name='Industry']");
 
@@ -625,7 +642,7 @@ function removeStartingSlashesFromString(string) {
 
 }
 
-function buildPageComponentHtml(htmlObject) {
+function buildPageComponentsHtml(htmlObject) {
     var pageComponents = $(htmlObject).find(componentSearchString);
     console.log(pageComponents);
     var pageComponentHtml = "";
@@ -1121,9 +1138,9 @@ function buildCardBandImages(currentComponent) {
         var body = $(cards[i]).find("n-xpm-richtext");
         var cta = $(cards[i]).find("n-content > div > n-button-group").find("a.cta");
         var images = $(cards[i]).find("n-xpm-image > img");
+        var media = $(cards[i]).find("n-content > a.cta");
 
 
-        //if we find more than 3 accordions, we need to add a new section to the html document
         if (i > 2) {
             var cardSection =
                 "<tr>" +
@@ -1142,6 +1159,8 @@ function buildCardBandImages(currentComponent) {
                 "<p style='margin-right:0in;margin-left:0in;font-size:16px;font-family:Times New Roman,serif;margin:0in;'><em><span id='a" + (i + 1) + "-image-source' style='font-size:15px;font-family:Calibri,sans-serif;color:gray;'>&nbsp;</span></em><span style='font-size:15px;font-family:Calibri,sans-serif;color:gray;'>&nbsp;</span></p>" +
                 "   <p style='margin-right:0in;margin-left:0in;font-size:16px;font-family:Times New Roman,serif;margin:0in;'><em><span style='font-size:15px;font-family:Calibri,sans-serif;color:gray;'>Alt text:</span></em><em><span style='font-size:15px;font-family:Calibri,sans-serif;color:#44546A;'>&nbsp;</span></em><span style='font-size:15px;font-family:Calibri,sans-serif;color:#44546A;'>&nbsp;</span></p>" +
                 "    <p style='margin-right:0in;margin-left:0in;font-size:16px;font-family:Times New Roman,serif;margin:0in;'><span id ='a" + (i + 1) + "-image-alt-text'style='font-size:15px;font-family:Calibri,sans-serif;color:#44546A;'>&nbsp;</span></p>                " +
+                "<p style='margin-right:0in;margin-left:0in;font-size:16px;font-family:Times New Roman,serif;margin:0in;'><em><span style='font-size:15px;font-family:Calibri,sans-serif;color:gray;'>Media:</span></em><em><span style='font-size:15px;font-family:Calibri,sans-serif;color:#44546A;'>&nbsp;</span></em><span style='font-size:15px;font-family:Calibri,sans-serif;color:#44546A;'>&nbsp;</span></p>"+
+                "<p style='margin-right:0in;margin-left:0in;font-size:16px;font-family:Times New Roman,serif;margin:0in;'><span id ='a" + (i + 1) + "-media'style='font-size:15px;font-family:Calibri,sans-serif;color:#44546A;'>&nbsp;</span></p>"+                
                 "</td>" +
                 "</tr>" +
                 "<tr>" +
@@ -1169,6 +1188,10 @@ function buildCardBandImages(currentComponent) {
         if (typeof images[0] !== 'undefined') {
             $(tempObject).find("#a" + (i + 1) + "-image-source").html((createImageHtml(images[0])));
             $(tempObject).find("#a" + (i + 1) + "-image-alt-text").html(images[0].alt);
+        }
+
+        if(typeof media[0] !== 'undefined'){
+            $(tempObject).find("#a" + (i + 1) + "-media").html(createLinkData(media[0], "link"));
         }
 
         if (typeof headline[0] !== 'undefined') {
@@ -3592,6 +3615,7 @@ function proseRegionTwo(currentComponent) {
 function buildPartnerDetailRegion(currentComponent){
     var tempObject = document.createElement("div");
     tempObject.innerHTML = getComponentHtml('n-partner-detail-region');
+    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
     var body = $(currentComponent).find("n-xpm-richtext")
     console.log(body)
 
