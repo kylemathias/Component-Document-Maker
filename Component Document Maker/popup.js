@@ -291,15 +291,20 @@ function findComponentsInURL(currentTab) {
         if (components.length > 1 && components[1] != "") {
             components = components[1].split(".");
             for (var i = 0; i < components.length; i++) {
-
-                components[i] = components[i].replace(/[0-9]|\&/g, '');
-                //console.log(components[i]);
+                
+                // [.][0-9] remove the . if it has a number next to it
+                //remove the & chracter
+                //^[0-9] remove any number at the start of the string 
+                // /g remove all instances of the character               
+                components[i] = components[i].replace(/[.][0-9]|&|^[0-9]/g, '');
+                
                 if (components[i] == "" || components[i] == '') {
 
                 }
             }
             //remove empty strings 
             components = components.filter(Boolean);
+            console.log(components);
             buildQuickWiresHtml(components);
         } else {
             setMessage("We Are on the Quickwires<sup>™</sup> page", selectCompontMessage, "</br>");
