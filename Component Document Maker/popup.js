@@ -772,7 +772,7 @@ function buildPageComponentsHtml(htmlObject) {
             pageComponentHtml += buildProseRightAside(pageComponents[i]);
         }
 
-        if ((pageComponents[i].localName == "n-prose-segment" && $(pageComponents[i]).attr("data-ntap-analytics-region") == "ProseRegionArticle") || (pageComponents[i].localName == "n-prose-segment" && pageComponents[i].firstElementChild.localName == "n-xpm-eyebrow")) {
+        if (pageComponents[i].localName == "n-prose-segment"){
             pageComponentHtml += buildProseArticle(pageComponents[i]);
         }
         if (pageComponents[i].localName == "n-prose-listicle") {
@@ -814,7 +814,7 @@ function buildPageComponentsHtml(htmlObject) {
 
 function postPageContentAdd(){
     var postPageHTML = "";
-    postPageHTML += "<p>Component Document Make Version Number: "+myVersion()+"</p>";
+    postPageHTML += "<p>Component Document Maker Version Number: "+myVersion()+"</p>";
 
     return postPageHTML;
 
@@ -847,16 +847,20 @@ function getCommentInfoFrom(htmlObject, nameOfId) {
 
     //this section is needed because customer story components place there tcm ids in the parents comment.
     //So we will check parent nodes for comments, and try to get a TCM id form there.
-    if(typeof htmlObject.length>0) {    
+    if(typeof htmlObject !== "undefined") {   
     if (comments.length === 0) {
         if(typeof htmlObject.parentNode !== "undefined") {
         comments = getComments(htmlObject.parentNode);
         }
     }
-    if (comments.length === 0) {              
-        comments = getComments(htmlObject.parentNode.parentNode);        
+    if (comments.length === 0) {  
+        if(typeof htmlObject.parentNode !== "undefined") {   
+        console.log("3rd if ran");         
+        comments = getComments(htmlObject.parentNode.parentNode);    
+        }    
     } 
 }   
+
     
     for (var i = 0; i < comments.length; i++) {
         var breakThisLoop = false;
@@ -3277,14 +3281,24 @@ function buildProseAside(currentComponent) {
 }
 
 function buildProseArticle(currentProseSegment) {
+    
+
+    //we only want to build a Prose Article if it is a editable component. 
+        var buildProse = false;
+    
     var tempObject = document.createElement("div");
     tempObject.innerHTML = getComponentHtml("n-prose-segment");
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentProseSegment, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentProseSegment, "ComponentModified"))));
     //remove current text in the Html Template
     $(tempObject).find("#page-content").html("");
 
+    //this find is for normal prose
     var getContentElements = $(currentProseSegment).children("n-xpm-eyebrow, h2, h3, n-xpm-richtext, n-button-group");
+    //this find is for this type of page https://ntapwwwprodstage-web9.azurewebsites.net/how-to-buy/sales-terms-and-conditions/
     getContentElements = getContentElements.add($(currentProseSegment).find("article > h2, article > h3, article > n-xpm-richtext, article > n-button-group"));
+    //this find is for this type of page https://ntapwwwprodstage-web9.azurewebsites.net/data-management/what-is-data-deduplication/
+    getContentElements = getContentElements.add($(currentProseSegment).find("n-eyebrow"));
+    console.log(getContentElements);
   
 
     var bodyCount = 0;
@@ -3294,9 +3308,10 @@ function buildProseArticle(currentProseSegment) {
     for (var i = 0; i < getContentElements.length; i++) {
         var index = (i + 1);
 
-        if (getContentElements[i].localName == "n-xpm-eyebrow") {
+        if (getContentElements[i].localName == ("n-xpm-eyebrow") || getContentElements[i].localName == ("n-eyebrow")) {
+            
             if (typeof getContentElements[i] != "undefined" && getContentElements[i].innerHTML != "") {
-
+                    
                 var eyeBrowSection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Eyebrow CTA]</strong></p>" +
                     "<p id = 'a" + index + "-cta-eye' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
                     "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Eyebrow Link]</strong></p>" +
@@ -3304,7 +3319,9 @@ function buildProseArticle(currentProseSegment) {
                 $(tempObject).find("#page-content").append(eyeBrowSection);
                 var currentEyeBrow = $(getContentElements[i]).find("a.eyebrow");
                 if (typeof currentEyeBrow[0] !== "undefined") {
+                    
                     if (currentEyeBrow[0].innerText != "") {
+                        buildProse = true;
                         $(tempObject).find("#a" + index + "-cta-eye").html(createLinkData(currentEyeBrow[0], "linkText") + "<br/>");
                         $(tempObject).find("#a" + index + "-link-eye").html(createLinkData(currentEyeBrow[0], "link") + "<br/>");
                     }
@@ -3314,6 +3331,7 @@ function buildProseArticle(currentProseSegment) {
             }
         }
         if (getContentElements[i].localName == "h2") {
+            buildProse = true;
             mainHeadingCount++;
             var mainHeadingSection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Main Heading]</strong></p>" +
                 "<p id = 'a" + index + "-main-heading' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p><br/>";
@@ -3321,6 +3339,7 @@ function buildProseArticle(currentProseSegment) {
             $(tempObject).find("#a" + index + "-main-heading").html(getContentElements[i].innerHTML + "<br/>");
         }
         if (getContentElements[i].localName == "h3") {
+            buildProse = true;
             secondaryHeadingCount++;
             var mainHeadingSection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Secondary Heading]</strong></p>" +
                 "<p id = 'a" + index + "-secondary-heading' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p><br/>";
@@ -3328,6 +3347,7 @@ function buildProseArticle(currentProseSegment) {
             $(tempObject).find("#a" + index + "-secondary-heading").html(getContentElements[i].innerHTML + "<br/>");
         }
         if (getContentElements[i].localName == "n-xpm-richtext") {
+            buildProse = true;
             bodyCount++;
             getContentElements[i] = formatInLineTable(getContentElements[i]);
             var bodySection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Body " + bodyCount + "]</strong></p>" +
@@ -3337,6 +3357,7 @@ function buildProseArticle(currentProseSegment) {
         }
 
         if (getContentElements[i].localName == "n-button-group") {
+            buildProse = true;
             var cta = $(getContentElements[i]).find("a.cta");
             if (cta.length > 1) {
                 for (var j = 0; j < cta.length; j++) {
@@ -3358,8 +3379,12 @@ function buildProseArticle(currentProseSegment) {
 
     }
 
-
+if(buildProse == true){
     return tempObject.innerHTML;
+}else{
+    return "";
+}
+
 
 }
 
@@ -3403,7 +3428,7 @@ function buildProseBlockQuote(currentComponent) {
     console.log(theme);
 
     if (typeof theme != "") {
-        $(tempObject).find("#a1-theme").html(theme + "<br/>");
+        $(tempObject).find("#a1-theme").html("Theme: " + theme);
     }
 
     var eyeBrow = $(currentComponent).find("n-eyebrow > a.eyebrow");
