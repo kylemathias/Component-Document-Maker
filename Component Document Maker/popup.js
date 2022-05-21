@@ -1697,9 +1697,13 @@ function buildImageWithTiles(currentComponent) {
     }
 
     for (var i = 0; i < tilesToMake; i++) {
-        var newTile = "<tr style='height: 25.9pt;'>" +
+        var newTile = "<tr style='height: 16.55pt;'>" +
+        "<td style='width: 151.45pt; border: solid windowtext 1.0pt; border-top: none; background: #E7E6E6; padding: 0in 0in 0in 0in;' valign='top'>" +
+        "<p style='margin: 0in; text-align: center; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em><span style='color: black;'>Tile " + (i + 1) + "</span></em></p>" +
+        "</td>" +
+        "</tr>" + 
+        "<tr style='height: 25.9pt;'>" +
             "<td style='width:  475.25pt; border: solid windowtext 1.0pt; border-top: none; padding: 0in 0in 0in 0in;' valign='top'> " +
-            "<p style='margin: 0in; text-align: center; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong><em>Tile " + (i + 1) + "</em></strong></p>" +
             "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Headline]</strong></p>" +
             "<p id = 'a" + (i + 1) + "-h1'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>" +
             "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Body]</strong></p>" +
@@ -2083,11 +2087,12 @@ function buildProse(currentComponent){
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
 
     var rtf = $(currentComponent).find("n-prose-nav > n-richtext");
+    var contentFound = false;
     
 
     if(typeof rtf[0] !== 'undefined'){
-        console.log(rtf);
         $(tempObject).find("#content-tag").html(" ");
+        contentFound = true;
         var rtfHtml = "<p id = 'left-column-nav' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;<strong>[Navigation]&nbsp;</strong> No</p>"+
             "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;<strong>[Navigation Headline]&nbsp;</strong></p>"+
             "<p id='left-column-nav-headline' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;</p>"+
@@ -2098,6 +2103,7 @@ function buildProse(currentComponent){
     }else{
         var nav = $(currentComponent).find("n-prose-nav").children("header, ul");
         if(typeof nav[0] !== 'undefined'){
+            contentFound = true;
             $(tempObject).find("#content-tag").html('');
 
             var navhtml = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;<strong>[Navigation]&nbsp;</strong> Yes</p>"+
@@ -2122,7 +2128,12 @@ function buildProse(currentComponent){
         }
     }
 
-    return tempObject.innerHTML;
+    if(contentFound){
+        return tempObject.innerHTML;
+    }else{
+        return "";
+    }
+ 
 }
 
 function buildProseMetaSideBar(currentComponent) {
@@ -2520,7 +2531,7 @@ function buildSideXSide(currentComponent) {
     var videoOverlay = $(currentComponent).find(" n-secondary > a.cta");
     var threeDDemo = $(currentComponent).find("n-secondary > n-3d-demo > a");
 
-    var eyeBrow = $(currentComponent).find("n-eyebrow > a.eyebrow");
+    var eyeBrow = $(currentComponent).find("n-eyebrow > a.eyebrow, n-xpm-eyebrow > a.eyebrow");
 
     if (typeof eyeBrow[0] !== "undefined" && eyeBrow[0].innerHTML != "") {
         var eyeBrowSection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Eyebrow CTA]</strong></p>" +
