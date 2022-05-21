@@ -765,6 +765,9 @@ function buildPageComponentsHtml(htmlObject) {
         if (pageComponents[i].localName == "n-tabbed-band-tiles") {
             pageComponentHtml += buildTabbedBandTiles(pageComponents[i]);
         }
+        if(pageComponents[i].localName == "n-prose"){
+            pageComponentHtml += buildProse(pageComponents[i]);
+        }
         if (pageComponents[i].localName == "n-prose-left-aside") {
             pageComponentHtml += buildProseLeftAside(pageComponents[i]);
         }
@@ -2074,33 +2077,57 @@ function buildProductComparisonTable(currentComponent) {
     return tempObject.outerHTML;
 }
 
+function buildProse(currentComponent){
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = getComponentHtml("n-prose");
+    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
+
+    var rtf = $(currentComponent).find("n-prose-nav > n-richtext");
+    
+
+    if(typeof rtf[0] !== 'undefined'){
+        console.log(rtf);
+        $(tempObject).find("#content-tag").html(" ");
+        var rtfHtml = "<p id = 'left-column-nav' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;<strong>[Navigation]&nbsp;</strong> No</p>"+
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;<strong>[Navigation Headline]&nbsp;</strong></p>"+
+            "<p id='left-column-nav-headline' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;</p>"+
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;[Rich Text Field]</strong></p>"+
+            "<p id = 'left-column-rtf' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>NA</p>";
+            $(tempObject).find("#content-tag").html(rtfHtml);
+            $(tempObject).find("#left-column-rtf").html(rtf[0].innerHTML);
+    }else{
+        var nav = $(currentComponent).find("n-prose-nav").children("header, ul");
+        if(typeof nav[0] !== 'undefined'){
+            $(tempObject).find("#content-tag").html('');
+
+            var navhtml = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;<strong>[Navigation]&nbsp;</strong> Yes</p>"+
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;<strong>[Navigation Headline]&nbsp;</strong></p>"+
+            "<p id='left-column-nav-headline' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;</p>"+
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;<strong>[Navigation]&nbsp;</strong> (This is auto generated from Prose Article Region's Headlines)</p>"+
+            "<p id='left-column-nav' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;</p>"+
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;[Rich Text Field]&nbsp;</strong>No</p>"+
+            "<p id = 'left-column-rtf' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'></p>";
+            $(tempObject).find("#content-tag").html(navhtml);
+
+
+        }
+        for(var i = 0; i < nav.length; i++){
+            if(nav[i].localName == "header"){
+                $(tempObject).find("#left-column-nav-headline").html(nav[i].innerHTML + "</br>");
+            }else{
+                var currentContent = ""
+                currentContent += $(tempObject).find("#left-column-nav").innerHTML;
+                $(tempObject).find("#left-column-nav").html(currentContent+nav[i].innerHTML);
+            }
+        }
+    }
+
+    return tempObject.innerHTML;
+}
+
 function buildProseMetaSideBar(currentComponent) {
     var tempObject = document.createElement("div");
     tempObject.innerHTML = getComponentHtml("n-prose-meta-side-bar");
-    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
-
-    return tempObject.innerHTML;
-}
-
-function buildProseByline(currentComponent) {
-    var tempObject = document.createElement("div");
-    tempObject.innerHTML = getComponentHtml("n-prose-byline");
-    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
-
-    return tempObject.innerHTML;
-}
-
-function buildProseTagList(currentComponent) {
-    var tempObject = document.createElement("div");
-    tempObject.innerHTML = getComponentHtml("n-prose-tag-list");
-    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
-
-    return tempObject.innerHTML;
-}
-
-function buildProseGroupRegion(currentComponent) {
-    var tempObject = document.createElement("div");
-    tempObject.innerHTML = getComponentHtml("n-prose-group-region");
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
 
     return tempObject.innerHTML;
@@ -3297,8 +3324,7 @@ function buildProseArticle(currentProseSegment) {
     //this find is for this type of page https://ntapwwwprodstage-web9.azurewebsites.net/how-to-buy/sales-terms-and-conditions/
     getContentElements = getContentElements.add($(currentProseSegment).find("article > h2, article > h3, article > n-xpm-richtext, article > n-button-group"));
     //this find is for this type of page https://ntapwwwprodstage-web9.azurewebsites.net/data-management/what-is-data-deduplication/
-    getContentElements = getContentElements.add($(currentProseSegment).find("n-eyebrow"));
-    console.log(getContentElements);
+    getContentElements = getContentElements.add($(currentProseSegment).find("n-eyebrow"));    
   
 
     var bodyCount = 0;
