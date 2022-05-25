@@ -9,9 +9,7 @@
 3. [Saving and Sharing](#savingandsharing)
 5. [Provide Feedback](#paragraph2)
 6. [Good to know](#paragraph3)
-    1. [On Review](#subparagraph4)
-    2. [On Quickwires™](#subparagraph5)
-    3. [SharePoint Templates](#subparagraph6)
+7. [FAQ](#faq)
 
 ## Installing <a name="introduction"></a>
 1. Vist the Chrome Store page for this extension at this
@@ -50,14 +48,6 @@ You can also use our SharPoint Word Documents to generate new components.
 
 ![image](https://user-images.githubusercontent.com/26488295/170320810-3fbf2239-0b76-4a81-b06f-d41f28f18434.png)
 
-
-## Provide Feedback <a name="paragraph2"></a>
-- You can use the feedback link in the extension to report any issues you see to our <a href="https://form.asana.com/?k=fUzb6bWTy8ZULM9YR8l-fg&amp;d=9031689333149" target="_blank" rel="noopener">Feedback Form</a>
-- Report any improvement that you think would be beneficial to implement to increase efficiency adn ease of use 
-- Provide any screenshots or generated documents that would help identify the issue or the change request to the submitted Feedback form
-
-![image](https://user-images.githubusercontent.com/26488295/170331419-6fcbce72-bb1f-4032-b74d-7790772081be.png) ![image](https://user-images.githubusercontent.com/26488295/170331431-ae7c1fb2-7212-41ba-93f6-56cfd5823234.png)
-
 ## Saving and Sharing <a name="savingandsharing"></a>
 To colaborate and make trackable edits to your Component Document you will need to enable sharing in Microsoft Word
 1. Enable AutoSave in Microsoft Word (top left in the document window)
@@ -73,18 +63,45 @@ To colaborate and make trackable edits to your Component Document you will need 
 
 ![image](https://user-images.githubusercontent.com/26488295/170335267-a924d7f1-2a78-47b2-a260-19c9e5a361d6.png)
 
+## Provide Feedback <a name="paragraph2"></a>
+- You can use the feedback link in the extension to report any issues you see to our <a href="https://form.asana.com/?k=fUzb6bWTy8ZULM9YR8l-fg&amp;d=9031689333149" target="_blank" rel="noopener">Feedback Form</a>
+- Report any improvement that you think would be beneficial to implement to increase efficiency adn ease of use 
+- Provide any screenshots or generated documents that would help identify the issue or the change request to the submitted Feedback form
+
+![image](https://user-images.githubusercontent.com/26488295/170331419-6fcbce72-bb1f-4032-b74d-7790772081be.png) ![image](https://user-images.githubusercontent.com/26488295/170331431-ae7c1fb2-7212-41ba-93f6-56cfd5823234.png)
+
+## Good to Know <a name="goodtoknow"></a>
+- Naming file format: Webpage path, date, and your current time
+
+![image](https://user-images.githubusercontent.com/26488295/170338031-c2c56e6a-5294-4765-8d7a-e37a292218f5.png)
+
+- If an SEO Component is missing, a green border will be placed around the SEO section to indicate that it needs to be filled out.
+
+![image](https://user-images.githubusercontent.com/26488295/170338045-dc4b7c80-6fbe-4b76-9649-fca155552267.png)
+
+- If the Page Component’s Metadata is blank, it should be updated with relevant Metadata.
+
+![image](https://user-images.githubusercontent.com/26488295/170338123-2d19747f-ef24-429b-ad0d-efb5e1affd2d.png)
+
+
 ## FAQ <a name="faq"></a>
 Q. **Do I need to save to a specific O365/SharePoint Location?**
 
 A. No, you do not need to save to a specific location. Please ensure you are providing a Share Link (People in NetApp Inc. with the link) in Asana.
-Can I use the plugin in a different browser? 
-At this time, only Chrome is supported. 
-Can we utilize Word Document Track Changes?
-Over time, we can investigate transitioning to Track Changes instead of highlighting 
-Can we lock documents during certain steps? 
-Yes, this can be done but is a manual step that PM/DXD would need to complete, read more
-Can I see who made a change or rollback?
-Use File Versions: Click File > Info > Version history (additional information on AutoSave)
+
+**Q. Can I use the plugin in a different browser?**
+
+A. At this time, only Chrome is supported. 
+**Q. Can we utilize Word Document Track Changes?**
+
+A. Over time, we can investigate transitioning to Track Changes instead of highlighting 
+**Q. Can we lock documents during certain steps?**
+
+A. Yes, this can be done but is a manual step that PM/DXD would need to complete, read more
+
+**Q. Can I see who made a change or rollback?**
+
+A. Use File Versions: Click File > Info > Version history (additional information on AutoSave)
 
 
 
