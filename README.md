@@ -59,8 +59,8 @@ You can also use our SharPoint Word Documents to generate new components.
 ![image](https://user-images.githubusercontent.com/26488295/170331419-6fcbce72-bb1f-4032-b74d-7790772081be.png) ![image](https://user-images.githubusercontent.com/26488295/170331431-ae7c1fb2-7212-41ba-93f6-56cfd5823234.png)
 
 ## Saving and Sharing <a name="savingandsharing"></a>
-To colaborate and make trackable edits to your Comontnent Document you will need to enable sharing in Microsoft Word
-1. Enable Auto Save in Microsoft Word (top left in the document window)
+To colaborate and make trackable edits to your Component Document you will need to enable sharing in Microsoft Word
+1. Enable AutoSave in Microsoft Word (top left in the document window)
 
 ![image](https://user-images.githubusercontent.com/26488295/170333148-fbed0350-0bd1-4fcf-8437-19498f32a857.png)
 
@@ -70,5 +70,21 @@ To colaborate and make trackable edits to your Comontnent Document you will need
   
 3. Change "People you specify can edit" to "People in NetApp Inc. with the link"  
 4. Then click "Copy" under "Copy link" 
+
+![image](https://user-images.githubusercontent.com/26488295/170335267-a924d7f1-2a78-47b2-a260-19c9e5a361d6.png)
+
+## FAQ <a name="faq"></a>
+Q. **Do I need to save to a specific O365/SharePoint Location?**
+
+A. No, you do not need to save to a specific location. Please ensure you are providing a Share Link (People in NetApp Inc. with the link) in Asana.
+Can I use the plugin in a different browser? 
+At this time, only Chrome is supported. 
+Can we utilize Word Document Track Changes?
+Over time, we can investigate transitioning to Track Changes instead of highlighting 
+Can we lock documents during certain steps? 
+Yes, this can be done but is a manual step that PM/DXD would need to complete, read more
+Can I see who made a change or rollback?
+Use File Versions: Click File > Info > Version history (additional information on AutoSave)
+
 
 
