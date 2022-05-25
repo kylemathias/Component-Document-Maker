@@ -10,8 +10,9 @@
 4. [Good to know](#paragraph2)
 
 ## Introduction <a name="introduction"></a>
-1. Install Chrome Extension:
-<a href="http://example.com/](https://chrome.google.com/webstore/detail/component-document-maker/eeapofmfnfeohjbpfimdpnjajjhdfaco?hl=en&authuser=0" target="_blank">Store link</a>
+1. Vist the Chrome Store page for this extension at this
+<a href="https://chrome.google.com/webstore/detail/component-document-maker/eeapofmfnfeohjbpfimdpnjajjhdfaco?hl=en&authuser=0" target="_blank">store link</a>
+2. Click "Add to Chrome"
 
 
 ![image](https://user-images.githubusercontent.com/26488295/170100572-101aa914-c51d-469e-bfd8-383741c812ad.png)
@@ -19,10 +20,9 @@
 
 
 ## Using <a name="paragraph1"></a>
-Currently this extention works on our Review/Stage site only. Limiting the extesion to only Review/Stage provides consisten content because review and our live site content can differ. 
+Currently this extention works on our Review/Stage site only. Limiting the extesion to only Review/Stage provides  content continuity between content authors.
 
-
-1. Navigate to a stage page, if you are on a live page, click the icon and select the “Review” button
+1. Navigate to a stage page, if you are on a live page, click the “Review” button in the extension window. This will navigate you to the Stage/Review page that you are currently on. 
 2. Click the extension icon   ![image](https://user-images.githubusercontent.com/26488295/170100653-0413cb59-606a-4530-8395-45f9cee6a5da.png)
 3. Click the ”Download" button
 
