@@ -15,9 +15,9 @@ var reviewDomain = "https://ntapwwwprodstage-web9.azurewebsites.net";
 //this runs the function on popup open
 chrome.tabs.query(query, callback);
 
-function myVersion() {    
+function myVersion() {
     return chrome.runtime.getManifest().version;
-    }
+}
 //this is a list of components that we will build html for. 
 //We use postion [x][0] for the component name
 //[x][1] is the file name
@@ -75,7 +75,7 @@ var listOfComponents = [
 //[x][1] Component number for the page level in the TCM id
 //[x][2] Component number for the Component level in the TCM id
 //[x][3] Component name for the Component level in the TCM id
-var listOfTcmIDs = [    
+var listOfTcmIDs = [
     ['040', '19', '4', '020C'],
     ['050 NL', '20', '15', '030C NL'],
     ['050 JA', '22', '16', '030C JA'],
@@ -202,7 +202,7 @@ function callback(tabs) {
     quickWire.innerHTML = "Quickwires";
 
     if (currentTab.url.startsWith("https://ntapwwwprodstage-web9.azurewebsites.net/") != true && currentTab.url.startsWith("https://ntapwwwtest-web9.azurewebsites.net/") != true && currentTab.url.startsWith("https://www.netapp.com/") != true) {
-        
+
         //to do
         replaceButtonWIthLink(reviewDomain, " Review ");
         setMessage("To Get Started", "To use this extension, please navigate to NetApp.com's " + reviewUrl.outerHTML + " or to create a new page use this extension on our mock up tool " + quickWire.outerHTML + " <sup>™</sup>", "Navigate to Review");
@@ -222,7 +222,7 @@ function callback(tabs) {
             setMessage("We are on the Live Site", "You are on the live site of netapp.com. If you would like to get a Word document version of this page, you can do so at this " + pageLink.outerHTML + " or to create a new page use this extension on our mock up tool " + quickWire.outerHTML + " <sup>™</sup>", "Navigate to Review");
         }
         var components = currentTab.url.split("#"); //get the string after "#" in the URL    
-        if (currentTab.url.startsWith("https://ntapwwwprodstage-web9.azurewebsites.net/quickwires.html")|| currentTab.url.startsWith("https://ntapwwwtest-web9.azurewebsites.net/quickwires.html")) {
+        if (currentTab.url.startsWith("https://ntapwwwprodstage-web9.azurewebsites.net/quickwires.html") || currentTab.url.startsWith("https://ntapwwwtest-web9.azurewebsites.net/quickwires.html")) {
             setMessage("We are on the Quickwires<sup>™</sup> page", "Your document is being generated and will be available to download shortly.", "Generating Document...");
             addComponentsHtmlToArray(currentTab);
         } else {
@@ -248,10 +248,11 @@ function callback(tabs) {
 
 
 }
+
 function replaceButtonWIthLink(link, buttonText) {
-    var svgArrowRigth = "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' class='bi bi-box-arrow-in-right' viewBox='0 0 16 16'>"+
-    "<image xlink:href='media/box-arrow-in-right.svg'/>"+
-    "</svg>";
+    var svgArrowRigth = "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' class='bi bi-box-arrow-in-right' viewBox='0 0 16 16'>" +
+        "<image xlink:href='media/box-arrow-in-right.svg'/>" +
+        "</svg>";
 
     document.getElementById("download-btn").innerHTML = buttonText + svgArrowRigth;
     document.getElementById("download-btn").addEventListener("click", function () {
@@ -291,13 +292,13 @@ function findComponentsInURL(currentTab) {
         if (components.length > 1 && components[1] != "") {
             components = components[1].split(".");
             for (var i = 0; i < components.length; i++) {
-                
+
                 // [.][0-9] remove the . if it has a number next to it
                 //remove the & chracter
                 //^[0-9] remove any number at the start of the string 
                 // /g remove all instances of the character               
                 components[i] = components[i].replace(/[.][0-9]|&|^[0-9]/g, '');
-                
+
                 if (components[i] == "" || components[i] == '') {
 
                 }
@@ -333,7 +334,7 @@ function buildQuickWiresHtml(components) {
     }
     wordDocHtml += postPageContentAdd();
     tempDiv.innerHTML = wordDocHtml;
-    
+
     //$(tempDiv).find("table").attr("style", "border: 4px solid green;");
     //tempDiv = addNewBorder(tempDiv);
 
@@ -390,7 +391,7 @@ function generateReviewHtml(pageHtml, currentTab) {
 function generateDocumentName(htmlObject) {
     var documentName = "";
     var title = $(htmlObject).find("head > title");
-   
+
 
     if (typeof title[0] !== 'undefined') {
         var pageTitle = title[0].innerText.split("|");
@@ -487,25 +488,25 @@ function buildPageComponent(htmlObject, currentTab) {
     $(pageObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(pageSEO, "PageID"), toBrowserTime(getCommentInfoFrom(pageSEO, "PageModified"))));
     $(pageObject).find("#page-url").html(liveLink);
     $(pageObject).find("#stage-url").html(reviewLink);
-    if(typeof siteLocations[0] !== 'undefined'){
+    if (typeof siteLocations[0] !== 'undefined') {
         var locations = "";
         var pageLocations = siteLocations[0].content;
-        if(pageLocations.includes("A-Z Listing")){
+        if (pageLocations.includes("A-Z Listing")) {
             locations = "A-Z Page Listing: Yes </br>";
-        }else{
+        } else {
             locations = "A-Z Page Listing: No </br>";
         }
-        
 
-        if(pageLocations.includes("Site Map")){
+
+        if (pageLocations.includes("Site Map")) {
             locations += "Site Map: Yes </br>";
-        }else{
+        } else {
             locations += "Site Map: No </br>";
         }
 
-        if(pageLocations.includes("Personalization module")){
+        if (pageLocations.includes("Personalization module")) {
             locations += "Personalization module: Yes";
-        }else{
+        } else {
             locations += "Personalization module: No";
         }
         $(pageObject).find("#site-locations").html(locations);
@@ -619,31 +620,31 @@ function createLinkData(aObject, returnType) {
     }
 
     if (typeof aObject !== 'undefined') {
-    if (aObject.classList.contains("cta--video")) {
-        var videoJson = new Object();
-        videoJson = aObject.dataset;
-        videoJson = JSON.parse(videoJson.nBc);
+        if (aObject.classList.contains("cta--video")) {
+            var videoJson = new Object();
+            videoJson = aObject.dataset;
+            videoJson = JSON.parse(videoJson.nBc);
 
 
-        //console.log("json: ");
-        //console.log(videoJson);
-        var videoId = videoJson.videoId;
-        var accountId = videoJson.accountId;
-        if (accountId == undefined) {
-            accountId = "260701648001";
+            //console.log("json: ");
+            //console.log(videoJson);
+            var videoId = videoJson.videoId;
+            var accountId = videoJson.accountId;
+            if (accountId == undefined) {
+                accountId = "260701648001";
+            }
+            var brightCoveUrl = "https://players.brightcove.net/" + accountId + "/default_default/index.html?videoId=" + videoId;
+
+            linkHref = "<a href='" + brightCoveUrl + "'>" + brightCoveUrl + "</a>";
+            linkText = aObject.innerText;
+
+            // console.log(linkHref);
+        } else {
+            aObject.href = aObject.href.replace(window.location.origin, reviewDomain);
+            linkHref = "<a href='" + aObject.href + "'>" + aObject.href + "</a>";
+            linkText = aObject.innerText;
         }
-        var brightCoveUrl = "https://players.brightcove.net/" + accountId + "/default_default/index.html?videoId=" + videoId;
-
-        linkHref = "<a href='" + brightCoveUrl + "'>" + brightCoveUrl + "</a>";
-        linkText = aObject.innerText;
-
-        // console.log(linkHref);
-    } else {
-        aObject.href = aObject.href.replace(window.location.origin, reviewDomain);
-        linkHref = "<a href='" + aObject.href + "'>" + aObject.href + "</a>";
-        linkText = aObject.innerText;
     }
-}
 
 
     if (returnType == "link") {
@@ -765,7 +766,7 @@ function buildPageComponentsHtml(htmlObject) {
         if (pageComponents[i].localName == "n-tabbed-band-tiles") {
             pageComponentHtml += buildTabbedBandTiles(pageComponents[i]);
         }
-        if(pageComponents[i].localName == "n-prose"){
+        if (pageComponents[i].localName == "n-prose") {
             pageComponentHtml += buildProse(pageComponents[i]);
         }
         if (pageComponents[i].localName == "n-prose-left-aside") {
@@ -775,7 +776,7 @@ function buildPageComponentsHtml(htmlObject) {
             pageComponentHtml += buildProseRightAside(pageComponents[i]);
         }
 
-        if (pageComponents[i].localName == "n-prose-segment"){
+        if (pageComponents[i].localName == "n-prose-segment") {
             pageComponentHtml += buildProseArticle(pageComponents[i]);
         }
         if (pageComponents[i].localName == "n-prose-listicle") {
@@ -800,11 +801,11 @@ function buildPageComponentsHtml(htmlObject) {
             pageComponentHtml += buildProseFullWidth(pageComponents[i]);
         }
 
-        if(pageComponents[i].localName == "n-press-release-article") {
+        if (pageComponents[i].localName == "n-press-release-article") {
             pageComponentHtml += buildPressReleaseArticle(pageComponents[i]);
         }
 
-        if(pageComponents[i].localName == "n-partner-detail-region") {
+        if (pageComponents[i].localName == "n-partner-detail-region") {
             pageComponentHtml += buildPartnerDetailRegion(pageComponents[i]);
         }
 
@@ -815,9 +816,9 @@ function buildPageComponentsHtml(htmlObject) {
     return pageComponentHtml;
 }
 
-function postPageContentAdd(){
+function postPageContentAdd() {
     var postPageHTML = "";
-    postPageHTML += "<p>Component Document Maker Version Number: "+myVersion()+"</p>";
+    postPageHTML += "<p>Component Document Maker Version Number: " + myVersion() + "</p>";
 
     return postPageHTML;
 
@@ -846,41 +847,40 @@ function cleanUpHtml(pageComponentHtml) {
 //this function will get the first comment for the giving object, and return the name of the Id requested.
 function getCommentInfoFrom(htmlObject, nameOfId) {
     var tcmId = "";
-    var comments = getComments(htmlObject);   
+    var comments = getComments(htmlObject);
 
     //this section is needed because customer story components place there tcm ids in the parents comment.
     //So we will check parent nodes for comments, and try to get a TCM id form there.
-    if(typeof htmlObject !== "undefined") {   
-    if (comments.length === 0) {
-        if(typeof htmlObject.parentNode !== "undefined") {
-        comments = getComments(htmlObject.parentNode);
+    if (typeof htmlObject !== "undefined") {
+        if (comments.length === 0) {
+            if (typeof htmlObject.parentNode !== "undefined") {
+                comments = getComments(htmlObject.parentNode);
+            }
+        }
+        if (comments.length === 0) {
+            if (typeof htmlObject.parentNode !== "undefined") {
+                comments = getComments(htmlObject.parentNode.parentNode);
+            }
         }
     }
-    if (comments.length === 0) {  
-        if(typeof htmlObject.parentNode !== "undefined") {   
-        console.log("3rd if ran");         
-        comments = getComments(htmlObject.parentNode.parentNode);    
-        }    
-    } 
-}   
 
-    
+
     for (var i = 0; i < comments.length; i++) {
         var breakThisLoop = false;
         var currentComment = comments[i].data;
-        currentComment = currentComment.substring(currentComment.indexOf("{"));        
-        
-       
+        currentComment = currentComment.substring(currentComment.indexOf("{"));
+
+
         //if we do not have a valid comment with json in it, we want to skip this comment.
-        if(isJsonString(currentComment)==false){
-        break;
+        if (isJsonString(currentComment) == false) {
+            break;
         }
 
         //this will take the current comment, check to see if it contains any key that matches the nameOfId
         //if it dose, we will then return that value from the comment.
-        JSON.parse(currentComment, function (key, value) {            
-            if (key == nameOfId) {                
-                tcmId = value;                
+        JSON.parse(currentComment, function (key, value) {
+            if (key == nameOfId) {
+                tcmId = value;
                 breakThisLoop = true;
             }
             return value;
@@ -1023,6 +1023,8 @@ function createCmsLinks(tcmID) {
 
     return tcmLinks;
 }
+//get the ID number from the comment in the liObject
+
 
 //tables in word when converted from HTMl do no put borders on the table. This funciton will add boarders to any table tag in a given html object
 function formatInLineTable(object) {
@@ -1047,43 +1049,43 @@ function buildAccordionBandHtml(currentComponent) {
         //get the content we need
         var headline = $(naccordions[i]).find("span.n-accordion-title");
         var subhead = $(naccordions[i]).find("span.n-accordion-subheader");
-        var bodyAndCTA = $(naccordions[i]).find("n-xpm-richtext, a.cta");        
+        var bodyAndCTA = $(naccordions[i]).find("n-xpm-richtext, a.cta");
 
         //if we find more than 3 accordions, we need to add a new section to the html document
-        
-            var accordionSection = "<tr>" +
-                "<td style='width: 467.2pt; border: solid black 1.0pt; border-top: none; background: #E7E6E6; padding: 0in 0in 0in 0in;' valign='top'>\n" +
-                "<p style='margin: 0in; text-align: center; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em><span style='color: black;'>Accordion " + (i + 1) + "</span></em></p>\n" +
-                "</td>" +
-                "</tr>" +
-                "<tr style='height: 54.6pt;'>" +
-                "<td id ='accordion-" + (i + 1) + "' style='width: 467.2pt; border: solid black 1.0pt; border-top: none; padding: 0in 0in 0in 0in;' valign='top'>" +
-                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Headline]&nbsp;</strong></p>" +
-                "<p id = 'a" + (i + 1) + "-h1'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>" +
-                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Sub-head]&nbsp;</strong></p>" +
-                "<p id = 'a" + (i + 1) + "-sh1'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>" +             
-                "</td>" +
-                "</tr>" +
-                "<tr style='height: 12.75pt;'>" +
-                "<td style='width: 467.2pt; border: solid black 1.0pt; border-top: none; background: #E7E6E6; padding: 0in 0in 0in 0in;' valign='top'>" +
-                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em><span style='color: black;'>Image</span></em></p>" +
-                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>" +
-                "</td>" +
-                "</tr>" +
-                "<tr style='height: 89.7pt;'>" +
-                "<td style='width: 467.2pt; border: solid black 1.0pt; border-top: none; padding: 0in 0in 0in 0in;' valign='top'>" +
-                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em><span style='color: gray;'>Source:</span></em><span style='color: gray;'>&nbsp;</span></p>" +
-                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em><span style='color: gray;'>Digital team to deliver&nbsp;</span></em><span style='color: gray;'>&nbsp;</span></p>" +
-                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em><span style='color: gray;'>Alt text:</span></em><em><span style='color: #44546a;'>&nbsp;</span></em><span style='color: #44546a;'>&nbsp;</span></p>" +
-                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><span style='color: #44546a;'>&nbsp;</span></p>" +
-                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;</p>" +
-                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><span style='color: gray;'>&nbsp;</span></p>" +
-                "</td>" +
-                "</tr>"
 
-            $(tempObject).find("#append-tag").append(accordionSection);
+        var accordionSection = "<tr>" +
+            "<td style='width: 467.2pt; border: solid black 1.0pt; border-top: none; background: #E7E6E6; padding: 0in 0in 0in 0in;' valign='top'>\n" +
+            "<p style='margin: 0in; text-align: center; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em><span style='color: black;'>Accordion " + (i + 1) + "</span></em></p>\n" +
+            "</td>" +
+            "</tr>" +
+            "<tr style='height: 54.6pt;'>" +
+            "<td id ='accordion-" + (i + 1) + "' style='width: 467.2pt; border: solid black 1.0pt; border-top: none; padding: 0in 0in 0in 0in;' valign='top'>" +
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Headline]&nbsp;</strong></p>" +
+            "<p id = 'a" + (i + 1) + "-h1'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>" +
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Sub-head]&nbsp;</strong></p>" +
+            "<p id = 'a" + (i + 1) + "-sh1'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>" +
+            "</td>" +
+            "</tr>" +
+            "<tr style='height: 12.75pt;'>" +
+            "<td style='width: 467.2pt; border: solid black 1.0pt; border-top: none; background: #E7E6E6; padding: 0in 0in 0in 0in;' valign='top'>" +
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em><span style='color: black;'>Image</span></em></p>" +
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>" +
+            "</td>" +
+            "</tr>" +
+            "<tr style='height: 89.7pt;'>" +
+            "<td style='width: 467.2pt; border: solid black 1.0pt; border-top: none; padding: 0in 0in 0in 0in;' valign='top'>" +
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em><span style='color: gray;'>Source:</span></em><span style='color: gray;'>&nbsp;</span></p>" +
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em><span style='color: gray;'>Digital team to deliver&nbsp;</span></em><span style='color: gray;'>&nbsp;</span></p>" +
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em><span style='color: gray;'>Alt text:</span></em><em><span style='color: #44546a;'>&nbsp;</span></em><span style='color: #44546a;'>&nbsp;</span></p>" +
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><span style='color: #44546a;'>&nbsp;</span></p>" +
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;</p>" +
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><span style='color: gray;'>&nbsp;</span></p>" +
+            "</td>" +
+            "</tr>"
 
-        
+        $(tempObject).find("#append-tag").append(accordionSection);
+
+
 
         if (typeof headline[0] !== 'undefined') {
             $(tempObject).find("#a" + (i + 1) + "-h1").html(headline[0].innerHTML);
@@ -1095,28 +1097,28 @@ function buildAccordionBandHtml(currentComponent) {
         var ctaCount = 0;
         var bodyCount = 0;
 
-        for(var j=0; j<bodyAndCTA.length; j++){
-            if(bodyAndCTA[j].localName == "n-xpm-richtext"){
+        for (var j = 0; j < bodyAndCTA.length; j++) {
+            if (bodyAndCTA[j].localName == "n-xpm-richtext") {
                 bodyCount++;
-               var bodySection =  "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Body]</strong></p>" +
-                "<p id = 'a" + (i + 1) + "-body-"+bodyCount+"' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>";
+                var bodySection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Body]</strong></p>" +
+                    "<p id = 'a" + (i + 1) + "-body-" + bodyCount + "' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>";
                 $(tempObject).find('#accordion-' + (i + 1)).append(bodySection);
                 $(tempObject).find("#a" + (i + 1) + "-body-" + bodyCount).html(formatInLineTable(bodyAndCTA[j]).innerHTML);
             }
 
-            if(bodyAndCTA[j].localName == "a"){
+            if (bodyAndCTA[j].localName == "a") {
                 ctaCount++;
                 var ctaSection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[CTA " + ctaCount + "]</strong></p>" +
-                "<p id = 'a" + (i + 1) + "-cta" + ctaCount + "'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
-                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Link " +ctaCount + "]</strong></p>" +
-                "<p id = 'a" + (i + 1) + "-link" + ctaCount + "' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>";
+                    "<p id = 'a" + (i + 1) + "-cta" + ctaCount + "'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
+                    "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Link " + ctaCount + "]</strong></p>" +
+                    "<p id = 'a" + (i + 1) + "-link" + ctaCount + "' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>";
                 $(tempObject).find('#accordion-' + (i + 1)).append(ctaSection);
                 $(tempObject).find("#a" + (i + 1) + "-cta" + ctaCount).html(createLinkData(bodyAndCTA[j], "linkText"));
                 $(tempObject).find("#a" + (i + 1) + "-link" + ctaCount).html(createLinkData(bodyAndCTA[j], "link"));
             }
 
         }
-       
+
     }
 
 
@@ -1144,7 +1146,7 @@ function buildCallOut(currentComponent) {
     var headline = $(currentComponent).find("n-content > h1");
     var body = $(currentComponent).find("n-content > n-xpm-richtext");
     var cta = $(currentComponent).find("a.cta");
-    
+
 
     if (typeof theme !== "undefined") {
         $(tempObject).find("#theme").html("Theme: " + theme);
@@ -1159,8 +1161,8 @@ function buildCallOut(currentComponent) {
     }
 
     if (typeof cta[0] !== 'undefined') {
-        $(tempObject).find("#a1-cta1").html(createLinkData(cta[0], "linkText") +"</br>");
-        $(tempObject).find("#a1-link1").html(createLinkData(cta[0], "link")+"</br>");
+        $(tempObject).find("#a1-cta1").html(createLinkData(cta[0], "linkText") + "</br>");
+        $(tempObject).find("#a1-link1").html(createLinkData(cta[0], "link") + "</br>");
     }
 
     if (typeof cta[1] !== 'undefined') {
@@ -1217,8 +1219,8 @@ function buildCardBandImages(currentComponent) {
                 "<p style='margin-right:0in;margin-left:0in;font-size:16px;font-family:Times New Roman,serif;margin:0in;'><em><span id='a" + (i + 1) + "-image-source' style='font-size:15px;font-family:Calibri,sans-serif;color:gray;'>&nbsp;</span></em><span style='font-size:15px;font-family:Calibri,sans-serif;color:gray;'>&nbsp;</span></p>" +
                 "   <p style='margin-right:0in;margin-left:0in;font-size:16px;font-family:Times New Roman,serif;margin:0in;'><em><span style='font-size:15px;font-family:Calibri,sans-serif;color:gray;'>Alt text:</span></em><em><span style='font-size:15px;font-family:Calibri,sans-serif;color:#44546A;'>&nbsp;</span></em><span style='font-size:15px;font-family:Calibri,sans-serif;color:#44546A;'>&nbsp;</span></p>" +
                 "    <p style='margin-right:0in;margin-left:0in;font-size:16px;font-family:Times New Roman,serif;margin:0in;'><span id ='a" + (i + 1) + "-image-alt-text'style='font-size:15px;font-family:Calibri,sans-serif;color:#44546A;'>&nbsp;</span></p>                " +
-                "<p style='margin-right:0in;margin-left:0in;font-size:16px;font-family:Times New Roman,serif;margin:0in;'><em><span style='font-size:15px;font-family:Calibri,sans-serif;color:gray;'>Media:</span></em><em><span style='font-size:15px;font-family:Calibri,sans-serif;color:#44546A;'>&nbsp;</span></em><span style='font-size:15px;font-family:Calibri,sans-serif;color:#44546A;'>&nbsp;</span></p>"+
-                "<p style='margin-right:0in;margin-left:0in;font-size:16px;font-family:Times New Roman,serif;margin:0in;'><span id ='a" + (i + 1) + "-media'style='font-size:15px;font-family:Calibri,sans-serif;color:#44546A;'>&nbsp;</span></p>"+                
+                "<p style='margin-right:0in;margin-left:0in;font-size:16px;font-family:Times New Roman,serif;margin:0in;'><em><span style='font-size:15px;font-family:Calibri,sans-serif;color:gray;'>Media:</span></em><em><span style='font-size:15px;font-family:Calibri,sans-serif;color:#44546A;'>&nbsp;</span></em><span style='font-size:15px;font-family:Calibri,sans-serif;color:#44546A;'>&nbsp;</span></p>" +
+                "<p style='margin-right:0in;margin-left:0in;font-size:16px;font-family:Times New Roman,serif;margin:0in;'><span id ='a" + (i + 1) + "-media'style='font-size:15px;font-family:Calibri,sans-serif;color:#44546A;'>&nbsp;</span></p>" +
                 "</td>" +
                 "</tr>" +
                 "<tr>" +
@@ -1248,7 +1250,7 @@ function buildCardBandImages(currentComponent) {
             $(tempObject).find("#a" + (i + 1) + "-image-alt-text").html(images[0].alt);
         }
 
-        if(typeof media[0] !== 'undefined'){
+        if (typeof media[0] !== 'undefined') {
             $(tempObject).find("#a" + (i + 1) + "-media").html(createLinkData(media[0], "link"));
         }
 
@@ -1290,6 +1292,13 @@ function buildCardBandImages(currentComponent) {
 }
 
 function buildCardBandHtml(currentComponent) {
+//if currentComponent is in a partner section, then we dont need to build this card band
+    if (typeof currentComponent.parentNode.parentNode.parentNode.localName !== 'undefined') {
+        if (currentComponent.parentNode.parentNode.parentNode.localName == "n-partner-detail-region") {
+            return "";
+        }
+    }
+
     var tempObject = document.createElement("div");
     tempObject.innerHTML = getComponentHtml("n-card-band");
 
@@ -1362,6 +1371,7 @@ function buildCardBandHtml(currentComponent) {
     }
 
     return tempObject.innerHTML;
+
 }
 
 function buildFancyCallout(currentComponent) {
@@ -1576,7 +1586,7 @@ function buildImageWithTabs(currentComponent) {
             "<td style='width: 151.45pt; border: solid windowtext 1.0pt; border-top: none; background: #E7E6E6; padding: 0in 0in 0in 0in;' valign='top'>" +
             "<p style='margin: 0in; text-align: center; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em><span style='color: black;'>Tab " + (i + 1) + "</span></em></p>" +
             "</td>" +
-            "</tr>" +           
+            "</tr>" +
             "<tr  style='height: 16.55pt;'>" +
             "<td style='width: 151.45pt; border: solid windowtext 1.0pt; border-top: none; background: #E7E6E6; padding: 0in 0in 0in 0in;' valign='top'>" +
             "<p style='margin: 0in; text-align: center; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em><span style='color: black;'>Tab Title</span></em></p>" +
@@ -1593,7 +1603,7 @@ function buildImageWithTabs(currentComponent) {
             "</td>" +
             "</tr>" +
             "<tr style='height: 34.45pt;'>" +
-            "<td id='page-section-" + (i + 1) + "' style='width: 151.45pt; border: solid windowtext 1.0pt; border-top: none; padding: 0in 0in 0in 0in;' valign='top'>" +            
+            "<td id='page-section-" + (i + 1) + "' style='width: 151.45pt; border: solid windowtext 1.0pt; border-top: none; padding: 0in 0in 0in 0in;' valign='top'>" +
             "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Headline]&nbsp;</strong></p>" +
             "<p id = 'a" + (i + 1) + "-h1'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>                " +
             "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Body]</strong></p>" +
@@ -1639,7 +1649,7 @@ function buildImageWithTabs(currentComponent) {
         }
 
 
-       
+
 
         if (typeof headline[0] !== 'undefined') {
             $(tempObject).find("#a" + (i + 1) + "-h1").html(headline[0].innerHTML);
@@ -1698,11 +1708,11 @@ function buildImageWithTiles(currentComponent) {
 
     for (var i = 0; i < tilesToMake; i++) {
         var newTile = "<tr style='height: 16.55pt;'>" +
-        "<td style='width: 151.45pt; border: solid windowtext 1.0pt; border-top: none; background: #E7E6E6; padding: 0in 0in 0in 0in;' valign='top'>" +
-        "<p style='margin: 0in; text-align: center; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em><span style='color: black;'>Tile " + (i + 1) + "</span></em></p>" +
-        "</td>" +
-        "</tr>" + 
-        "<tr style='height: 25.9pt;'>" +
+            "<td style='width: 151.45pt; border: solid windowtext 1.0pt; border-top: none; background: #E7E6E6; padding: 0in 0in 0in 0in;' valign='top'>" +
+            "<p style='margin: 0in; text-align: center; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em><span style='color: black;'>Tile " + (i + 1) + "</span></em></p>" +
+            "</td>" +
+            "</tr>" +
+            "<tr style='height: 25.9pt;'>" +
             "<td style='width:  475.25pt; border: solid windowtext 1.0pt; border-top: none; padding: 0in 0in 0in 0in;' valign='top'> " +
             "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Headline]</strong></p>" +
             "<p id = 'a" + (i + 1) + "-h1'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>" +
@@ -2019,25 +2029,25 @@ function buildPressReleaseArticle(currentComponent) {
     var location = $(currentComponent).find("n-content > div > p:nth-child(1) > strong");
     var titleComponent = $(currentComponent.parentNode).find("n-title");
 
-    if(typeof rtf[0] !== 'undefined'){
+    if (typeof rtf[0] !== 'undefined') {
         $(tempObject).find("#rtf").html(rtf[0].innerHTML);
     }
 
-    if(typeof subheading[0] !== 'undefined'){
+    if (typeof subheading[0] !== 'undefined') {
         $(tempObject).find("#a1-subheading").html(subheading[0].innerHTML);
     }
 
-    if(typeof body[0] !== 'undefined'){
+    if (typeof body[0] !== 'undefined') {
         $(tempObject).find("#a1-body").html(body[0].innerHTML);
     }
 
-    if(typeof titleComponent[0] !== 'undefined'){
+    if (typeof titleComponent[0] !== 'undefined') {
         var theme = $(titleComponent[0]).attr('n-theme');
         var headline = $(titleComponent[0]).find("h1");
         var images = $(titleComponent[0]).find("n-secondary > img");
-    
+
         var eyeBrow = $(titleComponent[0]).find("n-eyebrow > a.eyebrow");
-    
+
         //this section dosent need to be here because press release articles dont have a theme, but if they get added later, this will be needed
         if (typeof eyeBrow[0] !== "undefined" && eyeBrow[0].innerHTML != "") {
             var eyeBrowSection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Eyebrow CTA]</strong></p>" +
@@ -2047,13 +2057,13 @@ function buildPressReleaseArticle(currentComponent) {
             $(tempObject).find("#page-content").before(eyeBrowSection);
             $(tempObject).find("#a1-cta-eye").html(createLinkData(eyeBrow[0], "linkText"));
             $(tempObject).find("#a1-link-eye").html(createLinkData(eyeBrow[0], "link"));
-    
+
         }
-    
+
         if (typeof theme !== "undefined") {
             $(tempObject).find("#theme").html("Theme: " + theme);
         }
-    
+
         if (typeof headline[0] !== "undefined") {
             $(tempObject).find("#a1-h1").html(headline[0].innerHTML);
         }
@@ -2063,7 +2073,7 @@ function buildPressReleaseArticle(currentComponent) {
         }
     }
 
-    
+
     return tempObject.innerHTML;
 
 
@@ -2081,59 +2091,59 @@ function buildProductComparisonTable(currentComponent) {
     return tempObject.outerHTML;
 }
 
-function buildProse(currentComponent){
+function buildProse(currentComponent) {
     var tempObject = document.createElement("div");
     tempObject.innerHTML = getComponentHtml("n-prose");
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
 
     var rtf = $(currentComponent).find("n-prose-nav > n-richtext");
     var contentFound = false;
-    
 
-    if(typeof rtf[0] !== 'undefined'){
+
+    if (typeof rtf[0] !== 'undefined') {
         $(tempObject).find("#content-tag").html(" ");
         contentFound = true;
-        var rtfHtml = "<p id = 'left-column-nav' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;<strong>[Navigation]&nbsp;</strong> No</p>"+
-            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;<strong>[Navigation Headline]&nbsp;</strong></p>"+
-            "<p id='left-column-nav-headline' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;</p>"+
-            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;[Rich Text Field]</strong></p>"+
+        var rtfHtml = "<p id = 'left-column-nav' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;<strong>[Navigation]&nbsp;</strong> No</p>" +
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;<strong>[Navigation Headline]&nbsp;</strong></p>" +
+            "<p id='left-column-nav-headline' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;</p>" +
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;[Rich Text Field]</strong></p>" +
             "<p id = 'left-column-rtf' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>NA</p>";
-            $(tempObject).find("#content-tag").html(rtfHtml);
-            $(tempObject).find("#left-column-rtf").html(rtf[0].innerHTML);
-    }else{
+        $(tempObject).find("#content-tag").html(rtfHtml);
+        $(tempObject).find("#left-column-rtf").html(rtf[0].innerHTML);
+    } else {
         var nav = $(currentComponent).find("n-prose-nav").children("header, ul");
-        if(typeof nav[0] !== 'undefined'){
+        if (typeof nav[0] !== 'undefined') {
             contentFound = true;
             $(tempObject).find("#content-tag").html('');
 
-            var navhtml = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;<strong>[Navigation]&nbsp;</strong> Yes</p>"+
-            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;<strong>[Navigation Headline]&nbsp;</strong></p>"+
-            "<p id='left-column-nav-headline' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;</p>"+
-            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;<strong>[Navigation]&nbsp;</strong> (This is auto generated from Prose Article Region's Headlines)</p>"+
-            "<p id='left-column-nav' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;</p>"+
-            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;[Rich Text Field]&nbsp;</strong>No</p>"+
-            "<p id = 'left-column-rtf' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'></p>";
+            var navhtml = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;<strong>[Navigation]&nbsp;</strong> Yes</p>" +
+                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;<strong>[Navigation Headline]&nbsp;</strong></p>" +
+                "<p id='left-column-nav-headline' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;</p>" +
+                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;<strong>[Navigation]&nbsp;</strong> (This is auto generated from Prose Article Region's Headlines)</p>" +
+                "<p id='left-column-nav' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;</p>" +
+                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;[Rich Text Field]&nbsp;</strong>No</p>" +
+                "<p id = 'left-column-rtf' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'></p>";
             $(tempObject).find("#content-tag").html(navhtml);
 
 
         }
-        for(var i = 0; i < nav.length; i++){
-            if(nav[i].localName == "header"){
+        for (var i = 0; i < nav.length; i++) {
+            if (nav[i].localName == "header") {
                 $(tempObject).find("#left-column-nav-headline").html(nav[i].innerHTML + "</br>");
-            }else{
+            } else {
                 var currentContent = ""
                 currentContent += $(tempObject).find("#left-column-nav").innerHTML;
-                $(tempObject).find("#left-column-nav").html(currentContent+nav[i].innerHTML);
+                $(tempObject).find("#left-column-nav").html(currentContent + nav[i].innerHTML);
             }
         }
     }
 
-    if(contentFound){
+    if (contentFound) {
         return tempObject.innerHTML;
-    }else{
+    } else {
         return "";
     }
- 
+
 }
 
 function buildProseMetaSideBar(currentComponent) {
@@ -2182,7 +2192,7 @@ function buildQuoteBand(currentComponent) {
     if (typeof body[0] !== 'undefined') {
         var bodyText = "";
         //there are imported customer stories, this loop will combine innner text of all paragraphs into one string
-        for(var i = 0; i < body.length; i++) {
+        for (var i = 0; i < body.length; i++) {
             bodyText += body[i].innerHTML;
         }
         $(tempObject).find("#a1-body").html(bodyText);
@@ -2383,6 +2393,14 @@ function buildQuoteBandTabbed(currentComponent) {
 }
 
 function buildSectionHeader(currentComponent) {
+    //if the currentComponent is in a partner-detail-region tag, dont build a section header component.
+    if (typeof currentComponent.parentNode.parentNode.parentNode.parentNode.localName !== "undefined") {
+        if (currentComponent.parentNode.parentNode.parentNode.parentNode.localName == "n-partner-detail-region") {
+
+            return "";
+        }
+    }
+
     var tempObject = document.createElement("div");
     tempObject.innerHTML = getComponentHtml("n-section-header");
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
@@ -2420,9 +2438,10 @@ function buildSectionHeader(currentComponent) {
         }
 
     }
-
-
     return tempObject.innerHTML;
+
+
+
 }
 
 function buildShowcase(currentComponent) {
@@ -3111,7 +3130,7 @@ function buildProseMain(currentProseMain) {
 
     for (var i = 0; i < proseMainItems.length; i++) {
         console.log(proseMainItems[i]);
-        if ((proseMainItems[i].localName == "n-prose-segment" && $(proseMainItems[i]).attr("data-ntap-analytics-region") == "ProseRegionArticle") || (proseMainItems[i].localName == "n-prose-segment" && proseMainItems[i].firstElementChild.localName == "n-xpm-eyebrow") ) {
+        if ((proseMainItems[i].localName == "n-prose-segment" && $(proseMainItems[i]).attr("data-ntap-analytics-region") == "ProseRegionArticle") || (proseMainItems[i].localName == "n-prose-segment" && proseMainItems[i].firstElementChild.localName == "n-xpm-eyebrow")) {
             proseMainHTML += buildProseArticle(proseMainItems[i]);
         }
         if (proseMainItems[i].localName == "n-prose-listicle") {
@@ -3319,11 +3338,11 @@ function buildProseAside(currentComponent) {
 }
 
 function buildProseArticle(currentProseSegment) {
-    
+
 
     //we only want to build a Prose Article if it is a editable component. 
-        var buildProse = false;
-    
+    var buildProse = false;
+
     var tempObject = document.createElement("div");
     tempObject.innerHTML = getComponentHtml("n-prose-segment");
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentProseSegment, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentProseSegment, "ComponentModified"))));
@@ -3335,8 +3354,8 @@ function buildProseArticle(currentProseSegment) {
     //this find is for this type of page https://ntapwwwprodstage-web9.azurewebsites.net/how-to-buy/sales-terms-and-conditions/
     getContentElements = getContentElements.add($(currentProseSegment).find("article > h2, article > h3, article > n-xpm-richtext, article > n-button-group"));
     //this find is for this type of page https://ntapwwwprodstage-web9.azurewebsites.net/data-management/what-is-data-deduplication/
-    getContentElements = getContentElements.add($(currentProseSegment).find("n-eyebrow"));    
-  
+    getContentElements = getContentElements.add($(currentProseSegment).find("n-eyebrow"));
+
 
     var bodyCount = 0;
     var mainHeadingCount = 0;
@@ -3346,9 +3365,9 @@ function buildProseArticle(currentProseSegment) {
         var index = (i + 1);
 
         if (getContentElements[i].localName == ("n-xpm-eyebrow") || getContentElements[i].localName == ("n-eyebrow")) {
-            
+
             if (typeof getContentElements[i] != "undefined" && getContentElements[i].innerHTML != "") {
-                    
+
                 var eyeBrowSection = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Eyebrow CTA]</strong></p>" +
                     "<p id = 'a" + index + "-cta-eye' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
                     "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Eyebrow Link]</strong></p>" +
@@ -3356,7 +3375,7 @@ function buildProseArticle(currentProseSegment) {
                 $(tempObject).find("#page-content").append(eyeBrowSection);
                 var currentEyeBrow = $(getContentElements[i]).find("a.eyebrow");
                 if (typeof currentEyeBrow[0] !== "undefined") {
-                    
+
                     if (currentEyeBrow[0].innerText != "") {
                         buildProse = true;
                         $(tempObject).find("#a" + index + "-cta-eye").html(createLinkData(currentEyeBrow[0], "linkText") + "<br/>");
@@ -3416,11 +3435,11 @@ function buildProseArticle(currentProseSegment) {
 
     }
 
-if(buildProse == true){
-    return tempObject.innerHTML;
-}else{
-    return "";
-}
+    if (buildProse == true) {
+        return tempObject.innerHTML;
+    } else {
+        return "";
+    }
 
 
 }
@@ -3725,23 +3744,298 @@ function proseRegionTwo(currentComponent) {
 
 }
 
-function buildPartnerDetailRegion(currentComponent){
+function buildPartnerDetailRegion(currentComponent) {
     var tempObject = document.createElement("div");
     tempObject.innerHTML = getComponentHtml('n-partner-detail-region');
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
+    $(tempObject).find("#partner-delete").remove();
+
     var body = $(currentComponent).find("n-xpm-richtext")
-    console.log(body)
-
     var partnerName = $(currentComponent).find("n-partner-summary-region > section > n-partner-description > h1");
-    console.log(partnerName);
+    var partnerSidebar = $(currentComponent).find("n-partner-sidebar > section");
+    var breadCrumbforPDBID = $(currentComponent).find("n-partner-logo-hero > n-breadcrumb > nav > ol > li");
+    var imageLogo = $(currentComponent).find("n-partner-logo-hero > figure > n-xpm-image > img");
+    var sectionHeader = $(currentComponent).find("n-section-header");
+    var cardBand = $(currentComponent).find("n-card-band");
+    var partnerServices = $(currentComponent).find("n-partner-services");
 
-    if(typeof partnerName[0] !== 'undefined'){
+    if (typeof imageLogo[0] !== 'undefined') {
+        $(tempObject).find("#a1-image-source").html(createImageHtml(imageLogo[0]));
+        $(tempObject).find("#a1-image-alt-text").html(imageLogo[0].alt);
+    }
+
+    if (typeof partnerName[0] !== 'undefined') {
         $(tempObject).find("#partner-name").html(partnerName[0].innerHTML);
     }
-    if(typeof body[0] !== 'undefined'){
-        $(tempObject).find("#body").html(body[0].innerHTML)
+    if (typeof body[0] !== 'undefined') {
+        $(tempObject).find("#partner-body").html(body[0].innerHTML)
     }
+
+    //this finds the PDBID in the breadcrumb comment
+    if (typeof breadCrumbforPDBID[0] !== 'undefined') {
+        var pbdID = "";
+        //reg is matching only strings with numbers because the PDB ID is always a number
+        var reg = /^\d+$/;
+        //loop through breacCrumb li and get the comments
+        for (var i = 0; i < breadCrumbforPDBID.length; i++) {
+            var currentComments = getComments(breadCrumbforPDBID[i]);
+            //loop through each comment and get the comment text
+            for (var j = 0; j < currentComments.length; j++) {
+                //if the comment text is a number, then it is the PDB ID
+                if (reg.test(currentComments[j].textContent)) {
+                    pbdID += currentComments[j].textContent;
+                }
+            }
+        }
+        $(tempObject).find("#partner-id").html(" " + pbdID);
+
+    }
+    var createdAlliance = false;
+    var createdCustomerRef = false;
+
+    var allianceSection = "<tr style='height: 15px;'>" +
+        "    <td style='width: 618px; border: 1pt solid black; background: #e7e6e6 none repeat scroll 0% 0%; padding: 0in; height: 15px;' valign='top'>" +
+        "    <p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><i> Partner Sidebar: Alliance Partners to Choose from are below<br /></i></p>" +
+        "    </td>" +
+        "    </tr>" +
+        "    <tr>" +
+        "    <td style='width: 618px; border-color: currentcolor black black; border-style: none solid solid; border-width: medium 1pt 1pt; border-image: none 100% / 1 / 0 stretch; background: #e7e6e6 none repeat scroll 0% 0%; padding: 0in; height: 10px;' valign='top'>" +
+        "    <table style='border-collapse: collapse; width: 100%;' border='1'>" +
+        "    <tbody>" +
+        "    <tr style='height: 26px;'>" +
+        "    <td style='width: 30.4207%; height: 26px;'><span style='font-size: 12px;'><label>AI</label></span></td>" +
+        "    <td style='width: 34.7896%; height: 26px;'><span style='font-size: 12px;'><label>Big Data</label></span></td>" +
+        "    <td style='width: 34.7896%; height: 26px;'><span style='font-size: 12px;'><label>Cloud Data Services</label></span></td>" +
+        "    </tr>" +
+        "    <tr style='height: 24px;'>" +
+        "    <td style='width: 30.4207%; height: 24px;'><span style='font-size: 12px;'><label>Cloud Infrastructure</label></span></td>" +
+        "    <td style='width: 34.7896%; height: 24px;'><span style='font-size: 12px;'><label>Colo</label></span></td>" +
+        "    <td style='width: 34.7896%; height: 24px;'><span style='font-size: 12px;'><label>Converged Infrastructure</label></span></td>" +
+        "    </tr>" +
+        "    <tr style='height: 24px;'>" +
+        "    <td style='width: 30.4207%; height: 24px;'><span style='font-size: 12px;'><label>Data Protection</label></span></td>" +
+        "    <td style='width: 34.7896%; height: 24px;'><span style='font-size: 12px;'><label>Healthcare</label></span></td>" +
+        "    <td style='width: 34.7896%; height: 24px;'><span style='font-size: 12px;'><label>Media and Entertainment</label></span></td>" +
+        "    " +
+        "    </tr>" +
+        "    <tr style='height: 24px;'>" +
+        "        <td style='width: 34.7896%; height: 24px;'><span style='font-size: 12px;'><label>Security</label></span></td>" +
+        "    <td style='width: 30.4207%; height: 24px;'><span style='font-size: 12px;'><label>Storage Management</label></span></td>" +
+        "    <td style='width: 34.7896%; height: 24px;'><span style='font-size: 12px;'><label>StorageGRID</label></span></td>" +
+        "    " +
+        "    </tr>" +
+        "    <tr style='height: 24px;'>" +
+        "        <td style='width: 34.7896%; height: 24px;'><span style='font-size: 12px;'><label>Video Surveillance</label></span></td>" +
+        "    <td style='width: 30.4207%; height: 24px;'><span style='font-size: 12px;'><label>Virtualization</label></span></td>" +
+        "    </tr>" +
+        "    </tbody>" +
+        "    </table>" +
+        "    </td>" +
+        "    </tr>" +
+        "    <tr style='height: 54.6pt;'>" +
+        "    <td style='width: 618px; border-color:black; padding: 0in; height: 47px;' valign='top'>" +
+        "    <p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><b>[List of Alliance Partners]<br /></b></p>" +
+        "    <p id ='alliance-partners'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;</p>" +
+        "    </td>" +
+        "    </tr>" +
+        "" +
+        "    </td>" +
+        "</tr>";
+
+
+    var customerRefrenceSection = "    <tr style='height: 15px;'>" +
+        "    <td style='width: 618px; border: 1pt solid black; background: #e7e6e6 none repeat scroll 0% 0%; padding: 0in; height: 15px;' valign='top'>" +
+        "    <p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><i> Partner Sidebar: Customer Reference</i></p>" +
+        "    </td>" +
+        "    </tr>" +
+        "    <tr style='height: 54.6pt;'>" +
+        "    <td style='width: 618px; border-color:black; padding: 0in; height: 47px;' valign='top'>" +
+        "            <p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><b id='cr-cta'>[CTA (Customer Name)] <br/>&nbsp;</b></p>" +
+        "            <p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><b id='cr-link'>[Link (Customer Link)] <br/>&nbsp;</b></p>" +
+        "    </td>" +
+        "    </tr>";
+
+    for (var i = 0; i < partnerSidebar.length; i++) {
+        var index = i + 1;
+        var partnerSidebarSectionHeading = $(partnerSidebar[i]).find("h2");
+        var partnerSidebarSectionList = $(partnerSidebar[i]).find("ul");
+        var partnerSidebarSectionCTA = $(partnerSidebar[i]).find("a");
+        var partnerSideBarSectionCTAButton = $(partnerSidebar[i]).find("a.cta");
+        console.log(partnerSideBarSectionCTAButton);
+
+        var pdbSecton = "<tr style='height: 15px;'>" +
+            "<td style='width: 618px; border: 1pt solid black; background: #e7e6e6 none repeat scroll 0% 0%; padding: 0in; height: 15px;' valign='top'>" +
+            "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><i> Partner Sidebar: Content Generated by PDB</i></p>" +
+            "</td>" +
+            "</tr>" +
+            "<tr style='height: 54.6pt;'>" +
+            "<td style='width: 618px; border-color:black; padding: 0in; height: 47px;' valign='top'>" +
+            "<p id ='pdb-content-" + index + "'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'>&nbsp;</p>" +
+            "</td>" +
+            "</tr>";
+
+
+        if (typeof partnerSidebarSectionHeading[0] !== 'undefined') {
+
+            if ((partnerSidebarSectionHeading[0].innerHTML !== "Technology Solutions") && partnerSidebarSectionHeading[0].innerHTML !== "Customer Reference") {
+                $(tempObject).find("#partner-append").append(pdbSecton);
+                $(tempObject).find("#pdb-content-" + index).html(partnerSidebar[i].innerHTML);
+            } else {
+                if (partnerSidebarSectionHeading[0].innerHTML === "Technology Solutions") {
+                    if (typeof partnerSidebarSectionList[0] !== 'undefined') {
+                        createdAlliance = true;
+                        console.log(partnerSidebarSectionList[0].outerHTML);
+                        $(tempObject).find("#partner-append").append(allianceSection);
+                        $(tempObject).find("#alliance-partners").html(partnerSidebarSectionHeading[0].outerHTML + partnerSidebarSectionList[0].outerHTML);
+                    }
+
+                }
+                if (partnerSidebarSectionHeading[0].innerHTML === "Customer Reference") {
+                    if (typeof partnerSidebarSectionCTA[0] !== 'undefiend') {
+                        createdCustomerRef = true;
+                        $(tempObject).find("#partner-append").append(customerRefrenceSection);
+                        $(tempObject).find("#cr-cta").html('[CTA (Customer Name)] <br/>' + createLinkData(partnerSidebarSectionCTA[0], 'linkText'));
+                        $(tempObject).find("#cr-link").html('[Link (Customer Link)]&nbsp; </br>' + createLinkData(partnerSidebarSectionCTA[0], 'link'));
+                    }
+
+                }
+
+            }
+        }
+        if (typeof partnerSideBarSectionCTAButton[0] !== 'undefined') {
+            if (createdAlliance === false) {
+                createdAlliance = true;
+                $(tempObject).find("#partner-append").append(allianceSection);
+            }
+
+            if (createdCustomerRef === false) {
+                createdCustomerRef = true;
+                $(tempObject).find("#partner-append").append(customerRefrenceSection);
+            }
+
+            $(tempObject).find("#partner-append").append(pdbSecton);
+            $(tempObject).find("#pdb-content-" + index).html(partnerSideBarSectionCTAButton[0]);
+        }
+    }
+
+    if (createdAlliance === false) {
+        $(tempObject).find("#partner-append").append(allianceSection);
+    }
+
+    if (createdCustomerRef === false) {
+        $(tempObject).find("#partner-append").append(customerRefrenceSection);
+    }
+
+    if (typeof sectionHeader[0] !== 'undefined') {
+        var sectionHeadline = $(sectionHeader[0]).find("n-primary > n-content > h1");
+        var sectionBody = $(sectionHeader[0]).find("n-xpm-richtext");
+
+        if (typeof sectionHeadline[0] !== 'undefined') {
+            $(tempObject).find("#s1-h1").html(sectionHeadline[0].innerHTML + "&nbsp;<br/>");
+        }
+
+        if (typeof sectionBody[0] !== 'undefined') {
+            $(tempObject).find("#s1-body").html(sectionBody[0].innerHTML);
+        }
+    }
+
+    if (typeof cardBand[0] !== 'undefined') {
+        console.log(cardBand[0]);
+        $(tempObject).find("#delete-for-content").remove();
+        var cards = $(cardBand[0]).find("div.n-card-band-item");
+
+        var cardsToMake = cards.length;
+        if (cardsToMake >= 3) {
+
+        } else {
+            cardsToMake = 3;
+        }
+
+        for (var i = 0; i < cardsToMake; i++) {
+            var newCard = "<tr>" +
+                "<td style='width: 151.45pt;border-right: 1pt solid windowtext;border-bottom: 1pt solid windowtext;border-left: 1pt solid windowtext;border-top: none;background: rgb(231, 230, 230);padding: 0in;height: 16.55pt;border-image: initial;vertical-align: top;'>" +
+                "<p id='card-" + (i + 1) + "' style='margin-right:0in;margin-left:0in;font-size:16px;font-family:Times New Roman,serif;margin:0in;text-align:center;'><em><span style='font-size:15px;font-family:Calibri,sans-serif;color:black;'>Card " + (i + 1) + "</span></em></p>" +
+                "</td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td style='width: 151.45pt;border-right: 1pt solid windowtext;border-bottom: 1pt solid windowtext;border-left: 1pt solid windowtext;border-top: none;padding: 0in;height: 34.45pt;border-image: initial;vertical-align: top;'>" +
+                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Headline]&nbsp;</strong></p>" +
+                "<p id = 'a" + (i + 1) + "-h1'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p> " +
+                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Body]</strong></p>" +
+                "<p id = 'a" + (i + 1) + "-body' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>" +
+                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>&nbsp;</strong></p>" +
+                "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[CTA]</strong></p>" +
+                "   <p id = 'a" + (i + 1) + "-cta1'style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
+                "   <p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>[Link]</strong></p>" +
+                "   <p id = 'a" + (i + 1) + "-link1' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><em>&nbsp;</em></p>" +
+                "</td>            " +
+                "</tr>     ";
+            $(tempObject).find("#append-tag").append(newCard);
+
+        }
+
+        for (var i = 0; i < cards.length; i++) {
+            //get the content we need
+            var cardHeadline = $(cards[i]).find("h2");
+            var cardBody = $(cards[i]).find("n-xpm-richtext");
+            var cardCta = $(cards[i]).find("n-content > n-button-group").find("a.cta");
+
+
+
+
+
+            if (typeof cardHeadline[0] !== 'undefined') {
+                $(tempObject).find("#a" + (i + 1) + "-h1").html(cardHeadline[0].innerHTML);
+            }
+
+            if (typeof cardBody[0] !== 'undefined') {
+                $(tempObject).find("#a" + (i + 1) + "-body").html(cardBody[0].innerHTML);
+            }
+
+            if (typeof cardCta[0] !== 'undefined') {
+                $(tempObject).find("#a" + (i + 1) + "-cta1").html(createLinkData(cardCta[0], "linkText"));
+                $(tempObject).find("#a" + (i + 1) + "-link1").html(createLinkData(cardCta[0], "link"));
+            }
+
+
+        }
+    }
+
+    if (typeof partnerServices[0] !== 'undefined') {
+        var partnerServicesH1 = $(partnerServices[0]).children("h1");
+        var subH2 = $(partnerServices[0]).find("section > h2");
+        var partnerServicesList = $(partnerServices[0]).find("section > ul");
+
+        if (typeof partnerServicesH1[0] !== 'undefined') {
+            $(tempObject).find("#pis-h1").html(partnerServicesH1[0].innerHTML);
+        }
+
+        if (typeof subH2[0] !== 'undefined') {
+            $(tempObject).find("#ss1-h").html(subH2[0].innerHTML);
+        }
+
+        if (typeof subH2[1] !== 'undefined') {
+            $(tempObject).find("#ss2-h").html(subH2[1].innerHTML);
+        }
+        if (typeof subH2[2] !== 'undefined') {
+            $(tempObject).find("#ss3-h").html(subH2[2].innerHTML);
+        }
+
+        if (typeof partnerServicesList[0] !== 'undefined') {
+            $(tempObject).find("#pdb-s1").html(partnerServicesList[0].innerHTML);
+        }
+
+        if (typeof partnerServicesList[1] !== 'undefined') {
+            $(tempObject).find("#pdb-s2").html(partnerServicesList[1].innerHTML);
+        }
+
+        if (typeof partnerServicesList[2] !== 'undefined') {
+            $(tempObject).find("#pdb-s3").html(partnerServicesList[2].innerHTML);
+        }
+
+
+    }
+
 
     return tempObject.innerHTML;
 }
-
