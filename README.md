@@ -1,18 +1,20 @@
 # Component Document Maker
  
 ### Table of contents
-1. [Installing](#introduction)
-2. [Using](#paragraph1)
-    1. [On Review](#subparagraph1)
-    2. [On Quickwires™](#subparagraph2)
-    3. [SharePoint Templates](#subparagraph3)
-3. [Saving and Sharing](#savingandsharing)
-5. [Provide Feedback](#paragraph2)
-6. [Good to know](#goodtoknow)
-7. [FAQ](#faq)
+- [Component Document Maker](#component-document-maker)
+    - [Table of contents](#table-of-contents)
+  - [Installing <a name="introduction"></a>](#installing-)
+  - [Using <a name="paragraph1"></a>](#using-)
+    - [On Review <a name="subparagraph1"></a>](#on-review-)
+    - [On Quickwires™ <a name="subparagraph2"></a>](#on-quickwires-)
+    - [SharePoint Templates <a name="subparagraph3"></a>](#sharepoint-templates-)
+  - [Saving and Sharing <a name="savingandsharing"></a>](#saving-and-sharing-)
+  - [Provide Feedback <a name="paragraph2"></a>](#provide-feedback-)
+  - [Good to Know <a name="goodtoknow"></a>](#good-to-know-)
+  - [FAQ <a name="faq"></a>](#faq-)
 
 ## Installing <a name="introduction"></a>
-1. Vist the Chrome Store page for this extension at this
+1. Visit the Chrome Store page for this extension at this
 <a href="https://chrome.google.com/webstore/detail/component-document-maker/eeapofmfnfeohjbpfimdpnjajjhdfaco?hl=en&authuser=0" target="_blank">store link</a>
 2. Click "Add to Chrome"
 
@@ -22,7 +24,7 @@
 
 
 ## Using <a name="paragraph1"></a>
-Currently this extention works on our Review/Stage site only. Limiting the extesion to only Review/Stage provides  content continuity between content authors.
+Currently this extension works on our Review/Stage site only. Limiting the extesion to only Review/Stage provides  content continuity between content authors.
 
 ### On Review <a name="subparagraph1"></a>
 
@@ -49,7 +51,7 @@ You can also use our [SharPoint Word Documents](https://netapp.sharepoint.com/si
 ![image](https://user-images.githubusercontent.com/26488295/170320810-3fbf2239-0b76-4a81-b06f-d41f28f18434.png)
 
 ## Saving and Sharing <a name="savingandsharing"></a>
-To colaborate and make trackable edits to your Component Document you will need to enable sharing in Microsoft Word
+To collaborate and make trackable edits to your Component Document you will need to enable sharing in Microsoft Word
 1. Enable AutoSave in Microsoft Word (top left in the document window)
 
 ![image](https://user-images.githubusercontent.com/26488295/170333148-fbed0350-0bd1-4fcf-8437-19498f32a857.png)
