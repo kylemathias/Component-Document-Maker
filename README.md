@@ -8,7 +8,7 @@
     3. [SharePoint Templates](#subparagraph3)
 3. [Saving and Sharing](#savingandsharing)
 5. [Provide Feedback](#paragraph2)
-6. [Good to know](#paragraph3)
+6. [Good to know](#goodtoknow)
 7. [FAQ](#faq)
 
 ## Installing <a name="introduction"></a>
@@ -42,7 +42,7 @@ Currently this extention works on our Review/Stage site only. Limiting the extes
 ![cdmdemoquickwires](https://user-images.githubusercontent.com/26488295/170320379-3294aa2a-8c39-42b4-800c-248dd1abb514.gif)
 
 ### SharePoint Templates <a name="subparagraph3"></a>
-You can also use our SharPoint Word Documents to generate new components. 
+You can also use our [SharPoint Word Documents](https://netapp.sharepoint.com/sites/DigitalMarketingOperations2/Shared%20Documents/Forms/AllItems.aspx?csf=1&web=1&e=CQW2Pk&cid=11bdf3a6%2D402c%2D44f7%2Da858%2Dc7556bf053ce&RootFolder=%2Fsites%2FDigitalMarketingOperations2%2FShared%20Documents%2FDSM%20Web%20Components&FolderCTID=0x012000F12D4F657D83BD4CB51B30DE6BC10829) to generate new components. 
 1. Open the component document you would like to add.
 2. Right Click the Component, Copy then past it into you Page Document
 
