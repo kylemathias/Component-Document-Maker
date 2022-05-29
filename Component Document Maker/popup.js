@@ -30,6 +30,11 @@ var listOfComponents = [
     ['Card Band', 'Card_Band.html', 'n-card-band', ''],
     ['Fancy Callout', 'Fancy_Callout.html', 'n-fancy-callout', ''],
     ['Feature Tiles', 'Feature_Tiles.html', 'n-feature-tiles', ''],
+    ['Footnotes', 'Footnotes.html', 'n-footnotes', ''],
+    ['Form, Collection', 'Form, Collection.html', 'n-collection-form', ''],
+    ['Form, Dual Content', 'Form, Dual Content.html', 'n-dual-content-form', ''],
+    ['Form, Long', 'Form, Long.html', 'n-form-long', ''],
+    ['Form, Short', 'Form, Short.html', 'n-form-short', ''],
     ['Hero', 'Hero_Full.html', 'n-hero', ''],
     ['Image with 3 Tabs', 'Image_with_3_Tabs.html', 'n-image-3tabs', ''],
     ['Image with Tiles', 'Image_with_Tiles.html', 'n-image-with-tiles', ''],
@@ -702,11 +707,26 @@ function buildPageComponentsHtml(htmlObject) {
         if (pageComponents[i].localName == "n-card-band") {
             pageComponentHtml += buildCardBandHtml(pageComponents[i]);
         }
+        if(pageComponents[i].localName == "n-footnotes"){
+            pageComponentHtml += buildFootnotes(pageComponents[i]);
+        }
         if (pageComponents[i].localName == "n-fancy-callout") {
             pageComponentHtml += buildFancyCallout(pageComponents[i]);
         }
         if (pageComponents[i].localName == "n-feature-tiles") {
             pageComponentHtml += buildFeatureTiles(pageComponents[i]);
+        }
+        if(pageComponents[i].localName == "n-collection-form"){
+            pageComponentHtml += buildCollectionForm(pageComponents[i]);
+        }
+        if(pageComponents[i].localName =="n-dual-content-form"){
+            pageComponentHtml += buildDualContentForm(pageComponents[i]);
+        }
+        if(pageComponents[i].localName =="n-form-long"){
+            pageComponentHtml += buildFormLong(pageComponents[i]);
+        }
+        if(pageComponents[i].localName =="n-form-short"){
+            pageComponentHtml += buildFormShort(pageComponents[i]);
         }
         if (pageComponents[i].localName == "n-hero") {
             pageComponentHtml += buildHero(pageComponents[i]);
@@ -814,6 +834,11 @@ function buildPageComponentsHtml(htmlObject) {
     pageComponentHtml = cleanUpHtml(pageComponentHtml);
 
     return pageComponentHtml;
+}
+
+function getFormIdFromTagID(tagId) {
+    var formId = tagId.replace("mktoForm_", "");
+    return formId;
 }
 
 function postPageContentAdd() {
@@ -1494,6 +1519,295 @@ function buildFeatureTiles(currentComponent) {
 
     }
 
+    return tempObject.innerHTML;
+}
+function buildFormShort(currentComponent){
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = getComponentHtml("n-form-short");
+    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
+
+    var theme = $(currentComponent).attr('n-theme');
+    var mainHeadline = $(currentComponent).find("n-primary > n-content > h1");
+    var mainBody = $(currentComponent).find("n-primary > n-content > n-richtext");
+    var formName = $(currentComponent).find("n-primary > n-content > form.ntapForm");
+    var formID = $(currentComponent).find('form[id^=mktoForm]');
+    var declaration = $(currentComponent).find("div.long-form-declaration > n-richtext ");
+    var thanksHeading = $(currentComponent).find("#embeddedThanks > h2");
+    var thanksMessage = $(currentComponent).find("#embeddedThanks > n-richtext");
+    var submitButton = $(currentComponent).find("#submitHiddenForm");
+    
+
+    if(typeof theme !== 'undefined'){
+        $(tempObject).find("#theme").html("Theme: " + theme);
+    }
+
+
+
+    if (typeof mainHeadline[0] !== 'undefined') {
+        $(tempObject).find("#form-headline").html(mainHeadline[0].innerHTML+"</br>");
+    }
+
+    if(typeof mainBody[0] !== 'undefined'){
+        $(tempObject).find("#form-description").html(mainBody[0].innerHTML+"</br>");
+    }
+
+    if(typeof formName[0] !== 'undefined'){
+        $(tempObject).find("#form-name").html(formName[0].name+"</br>");
+    }
+
+    if(typeof formID[0] !== 'undefined'){
+        $(tempObject).find("#form-id").html(getFormIdFromTagID(formID[0].id)+"</br>");
+    }
+    if(typeof declaration[0] !== 'undefined'){
+        $(tempObject).find("#form-declaration").html(declaration[0].innerHTML+"</br>");
+    }
+
+    if(typeof submitButton[0] !== 'undefined'){
+        $(submitButton[0]).find('title').remove();
+        $(tempObject).find("#submit-button").html(submitButton[0].outerText+"</br>");
+    }
+
+    if(typeof thanksHeading[0] !== 'undefined'){
+        $(tempObject).find("#thanks-heading").html(thanksHeading[0].innerHTML+"</br>");
+    }
+
+    if(typeof thanksMessage[0] !== 'undefined'){
+        $(tempObject).find("#thanks-message").html(thanksMessage[0].innerHTML+"</br>");
+    }
+   
+    return tempObject.innerHTML;
+
+}
+function buildFormLong(currentComponent){
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = getComponentHtml("n-form-long");
+    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
+
+    var theme = $(currentComponent).attr('n-theme');
+    var mainHeadline = $(currentComponent).find("n-primary > n-content > h1");
+    var mainBody = $(currentComponent).find("n-primary > n-content > n-richtext");
+    var formName = $(currentComponent).find("n-primary > n-content > form.ntapForm");
+    var formID = $(currentComponent).find('form[id^=mktoForm]');
+    var declaration = $(currentComponent).find("div.long-form-declaration > n-richtext ");
+    var thanksHeading = $(currentComponent).find("#embeddedThanks > h2");
+    var thanksMessage = $(currentComponent).find("#embeddedThanks > n-richtext");
+    var submitButton = $(currentComponent).find("#submitHiddenForm");
+    
+
+    if(typeof theme !== 'undefined'){
+        $(tempObject).find("#theme").html("Theme: " + theme);
+    }
+
+
+
+    if (typeof mainHeadline[0] !== 'undefined') {
+        $(tempObject).find("#form-headline").html(mainHeadline[0].innerHTML+"</br>");
+    }
+
+    if(typeof mainBody[0] !== 'undefined'){
+        $(tempObject).find("#form-description").html(mainBody[0].innerHTML+"</br>");
+    }
+
+    if(typeof formName[0] !== 'undefined'){
+        $(tempObject).find("#form-name").html(formName[0].name+"</br>");
+    }
+
+    if(typeof formID[0] !== 'undefined'){
+        $(tempObject).find("#form-id").html(getFormIdFromTagID(formID[0].id)+"</br>");
+    }
+    if(typeof declaration[0] !== 'undefined'){
+        $(tempObject).find("#form-declaration").html(declaration[0].innerHTML+"</br>");
+    }
+
+    if(typeof submitButton[0] !== 'undefined'){
+        $(submitButton[0]).find('title').remove();
+        $(tempObject).find("#submit-button").html(submitButton[0].outerText+"</br>");
+    }
+
+    if(typeof thanksHeading[0] !== 'undefined'){
+        $(tempObject).find("#thanks-heading").html(thanksHeading[0].innerHTML+"</br>");
+    }
+
+    if(typeof thanksMessage[0] !== 'undefined'){
+        $(tempObject).find("#thanks-message").html(thanksMessage[0].innerHTML+"</br>");
+    }
+   
+    return tempObject.innerHTML;
+}
+
+function buildCollectionForm(currentComponent){
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = getComponentHtml("n-collection-form");
+    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
+
+    var theme = $(currentComponent).attr('n-collection-form-theme');
+    var mainImage = $(currentComponent).find("n-primary > n-primary-main > n-dual-content-form-image-video-container > a > img, n-primary > n-primary-main > n-dual-content-form-image-video-container > img");
+    var overLayMedia = $(currentComponent).find("n-primary > n-primary-main > n-dual-content-form-image-video-container > a");
+    var mainHeadline = $(currentComponent).find("n-primary > n-content > h1");
+    var mainBody = $(currentComponent).find("n-primary > n-content > n-richtext");
+    var ctaButtons = $(currentComponent).find("n-primary > n-content> n-button-group > a.cta");
+    var secondaryImage = $(currentComponent).find("n-primary > n-content > n-image-container > img");
+    var secondaryHeadline = $(currentComponent).find("n-secondary > n-collection-form-form-container > div > h2");
+    var secondaryBody = $(currentComponent).find("n-secondary > n-collection-form-form-container > div > n-richtext");
+    var formName = $(currentComponent).find("n-secondary > n-collection-form-form-container > div > form.ntapForm");
+    var formID = $(currentComponent).find('form[id^=mktoForm]');
+    var declaration = $(currentComponent).find("div.long-form-declaration > n-richtext ");
+    var thanksHeading = $(currentComponent).find("#embeddedThanks > h2");
+    var thanksMessage = $(currentComponent).find("#embeddedThanks > n-richtext");
+    var submitButton = $(currentComponent).find("#submitHiddenForm");
+    
+
+    if(typeof theme !== 'undefined'){
+        $(tempObject).find("#theme").html("Theme: " + theme);
+    }
+
+    if(typeof mainImage[0] !== 'undefined'){
+        $(tempObject).find("#a1-image-source").html(createImageHtml(mainImage[0])+"</br>");
+        $(tempObject).find("#a1-image-alt-text").html(mainImage[0].alt +"</br>");
+    }
+
+    if(typeof overLayMedia[0] !== 'undefined'){
+        $(tempObject).find("#a1-video").html(createLinkData(overLayMedia[0], "link"))+"</br>";
+    }
+
+    if (typeof mainHeadline[0] !== 'undefined') {
+        $(tempObject).find("#main-heading").html(mainHeadline[0].innerHTML+"</br>");
+    }
+
+    if(typeof mainBody[0] !== 'undefined'){
+        $(tempObject).find("#main-body").html(mainBody[0].innerHTML+"</br>");
+    }
+
+    if(typeof ctaButtons[0] !== 'undefined'){
+        $(tempObject).find("#cta").html(createLinkData(ctaButtons[0], "linkText")+"</br>");
+        $(tempObject).find("#url").html(createLinkData(ctaButtons[0], "link")+"</br>");
+    }
+
+    if(typeof secondaryImage[0] !== 'undefined'){
+        $(tempObject).find("#a2-image-source").html(createImageHtml(secondaryImage[0])+"</br>");
+        $(tempObject).find("#a2-image-alt-text").html(secondaryImage[0].alt +"</br>");
+    }
+
+    if(typeof secondaryHeadline[0] !== 'undefined'){
+        $(tempObject).find("#form-headline").html(secondaryHeadline[0].innerHTML)+"</br>";
+    }
+
+    if(typeof secondaryBody[0] !== 'undefined'){
+        $(tempObject).find("#form-description").html(secondaryBody[0].innerHTML)+"</br>";
+    }
+
+    if(typeof formName[0] !== 'undefined'){
+        $(tempObject).find("#form-name").html(formName[0].name+"</br>");
+    }
+
+    if(typeof formID[0] !== 'undefined'){
+        $(tempObject).find("#form-id").html(getFormIdFromTagID(formID[0].id)+"</br>");
+    }
+    if(typeof declaration[0] !== 'undefined'){
+        $(tempObject).find("#form-declaration").html(declaration[0].innerHTML+"</br>");
+    }
+
+    if(typeof submitButton[0] !== 'undefined'){
+        $(submitButton[0]).find('title').remove();
+        $(tempObject).find("#submit-button").html(submitButton[0].outerText+"</br>");
+    }
+
+    if(typeof thanksHeading[0] !== 'undefined'){
+        $(tempObject).find("#thanks-heading").html(thanksHeading[0].innerHTML+"</br>");
+    }
+
+    if(typeof thanksMessage[0] !== 'undefined'){
+        $(tempObject).find("#thanks-message").html(thanksMessage[0].innerHTML+"</br>");
+    }
+   
+    return tempObject.innerHTML;
+}
+
+function buildDualContentForm(currentComponent){
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = getComponentHtml("n-dual-content-form");
+    $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
+
+    var theme = $(currentComponent).attr('n-dual-content-form-theme');
+    var mainImage = $(currentComponent).find("n-primary > n-primary-main > n-dual-content-form-image-video-container > a > img, n-primary > n-primary-main > n-dual-content-form-image-video-container > img");
+    var overLayMedia = $(currentComponent).find("n-primary > n-primary-main > n-dual-content-form-image-video-container > a");
+    var mainHeadline = $(currentComponent).find(" n-primary > n-primary-main > h1");
+    var mainBody = $(currentComponent).find("n-primary > n-primary-main > n-richtext");
+    var ctaButtons = $(currentComponent).find("n-primary > n-primary-main > n-button-group > a.cta");
+    var secondaryImage = $(currentComponent).find("n-primary > n-dual-content-form-background-image-container > img");
+    var secondaryHeadline = $(currentComponent).find("n-secondary > n-dual-content-form-form-container > div > h2");
+    var secondaryBody = $(currentComponent).find("n-secondary > n-dual-content-form-form-container > div > n-richtext");
+    var formName = $(currentComponent).find("n-secondary > n-dual-content-form-form-container > div > form.ntapForm");
+    var formID = $(currentComponent).find('form[id^=mktoForm]');
+    var declaration = $(currentComponent).find("div.long-form-declaration > n-richtext ");
+    var thanksHeading = $(currentComponent).find("#embeddedThanks > h2");
+    var thanksMessage = $(currentComponent).find("#embeddedThanks > n-richtext");
+    var submitButton = $(currentComponent).find("#submitHiddenForm");
+    
+
+    if(typeof theme !== 'undefined'){
+        $(tempObject).find("#theme").html("Theme: " + theme);
+    }
+
+    if(typeof mainImage[0] !== 'undefined'){
+        $(tempObject).find("#a1-image-source").html(createImageHtml(mainImage[0])+"</br>");
+        $(tempObject).find("#a1-image-alt-text").html(mainImage[0].alt +"</br>");
+    }
+
+    if(typeof overLayMedia[0] !== 'undefined'){
+        $(tempObject).find("#a1-video").html(createLinkData(overLayMedia[0], "link"))+"</br>";
+    }
+
+    if (typeof mainHeadline[0] !== 'undefined') {
+        $(tempObject).find("#main-heading").html(mainHeadline[0].innerHTML+"</br>");
+    }
+
+    if(typeof mainBody[0] !== 'undefined'){
+        $(tempObject).find("#main-body").html(mainBody[0].innerHTML+"</br>");
+    }
+
+    if(typeof ctaButtons[0] !== 'undefined'){
+        $(tempObject).find("#cta").html(createLinkData(ctaButtons[0], "linkText")+"</br>");
+        $(tempObject).find("#url").html(createLinkData(ctaButtons[0], "link")+"</br>");
+    }
+
+    if(typeof secondaryImage[0] !== 'undefined'){
+        $(tempObject).find("#a2-image-source").html(createImageHtml(secondaryImage[0])+"</br>");
+        $(tempObject).find("#a2-image-alt-text").html(secondaryImage[0].alt +"</br>");
+    }
+
+    if(typeof secondaryHeadline[0] !== 'undefined'){
+        $(tempObject).find("#form-headline").html(secondaryHeadline[0].innerHTML)+"</br>";
+    }
+
+    if(typeof secondaryBody[0] !== 'undefined'){
+        $(tempObject).find("#form-description").html(secondaryBody[0].innerHTML)+"</br>";
+    }
+
+    if(typeof formName[0] !== 'undefined'){
+        $(tempObject).find("#form-name").html(formName[0].name+"</br>");
+    }
+
+    if(typeof formID[0] !== 'undefined'){
+        $(tempObject).find("#form-id").html(getFormIdFromTagID(formID[0].id)+"</br>");
+    }
+    if(typeof declaration[0] !== 'undefined'){
+        $(tempObject).find("#form-declaration").html(declaration[0].innerHTML+"</br>");
+    }
+
+    if(typeof submitButton[0] !== 'undefined'){
+        $(submitButton[0]).find('title').remove();
+        $(tempObject).find("#submit-button").html(submitButton[0].outerText+"</br>");
+    }
+
+    if(typeof thanksHeading[0] !== 'undefined'){
+        $(tempObject).find("#thanks-heading").html(thanksHeading[0].innerHTML+"</br>");
+    }
+
+    if(typeof thanksMessage[0] !== 'undefined'){
+        $(tempObject).find("#thanks-message").html(thanksMessage[0].innerHTML+"</br>");
+    }
+   
     return tempObject.innerHTML;
 }
 
@@ -4038,4 +4352,25 @@ function buildPartnerDetailRegion(currentComponent) {
 
 
     return tempObject.innerHTML;
+}
+
+function buildFootnotes(){
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = $("#footnotes").html();
+
+    
+    var footnotesList = $(footnotes[0]).find("footer > div > div.n-page-level-footnotes-left-container");
+    console.log(footnotesList);
+
+    if(typeof footnotesList[0] !== 'undefined'){
+
+    }   
+    
+        
+
+        
+    
+
+    return tempObject.innerHTML;
+
 }
