@@ -28,9 +28,9 @@ var listOfComponents = [
     ['Callout', 'Callout.html', 'n-call-out', ''],
     ['Card Band With Images', 'Card_Band_Images.html', 'n-card-band-images', ''],
     ['Card Band', 'Card_Band.html', 'n-card-band', ''],
+    ['Component Footnotes', 'Component_Footnotes.html', 'n-component-footnotes', ''],
     ['Fancy Callout', 'Fancy_Callout.html', 'n-fancy-callout', ''],
-    ['Feature Tiles', 'Feature_Tiles.html', 'n-feature-tiles', ''],
-    ['Footnotes', 'Footnotes.html', 'n-footnotes', ''],
+    ['Feature Tiles', 'Feature_Tiles.html', 'n-feature-tiles', ''],    
     ['Form, Collection', 'Form, Collection.html', 'n-collection-form', ''],
     ['Form, Dual Content', 'Form, Dual Content.html', 'n-dual-content-form', ''],
     ['Form, Long', 'Form, Long.html', 'n-form-long', ''],
@@ -42,7 +42,9 @@ var listOfComponents = [
     ['Logo Band', 'Logo_Band.html', 'n-logo-band', ''],
     ['Offset Cards', 'Offset_Cards.html', 'n-offset-cards', ''],
     ['Page Component', 'Page_Component.html', 'n-page', ''],
+    ['Page Footnotes', 'Page_Footnotes.html', 'n-page-footnotes', ''],
     ['Page Guidelines', 'Page_Guidelines.html', 'n-page-guidelines', ''],
+    ['Page SEO Guidelines', 'Page_SEO_Guidelines.html', 'n-page-seo-guidelines', ''],
     ['Partner Connect', 'Partner_Connect_Template.html', 'n-partner-detail-region', ''],
     ['Press Release Article', 'Press_Release_Article.html', 'n-press-release-article', ''],
     ['Product Comparison Table', 'Product_Comparison_Table.html', 'n-product-comparison-table', ''],
@@ -326,6 +328,7 @@ function findComponentsInURL(currentTab) {
 function buildQuickWiresHtml(components) {
     var tempDiv = document.createElement("div");
     wordDocHtml += getComponentHtml("n-page-guidelines");
+    wordDocHtml += getComponentHtml("n-page-seo-guidelines");
     wordDocHtml += getComponentHtml("seo-url-breadcrumb");
     wordDocHtml += getComponentHtml("n-page");
 
@@ -368,15 +371,20 @@ function generateReviewHtml(pageHtml, currentTab) {
     var htmlObject = document.createElement('html');
     htmlObject.innerHTML = pageHtml;
 
+    //replace all footnotes
+    var footNoteSection = buildFootnotes(pageHtml);
+
     var documentName = generateDocumentName(htmlObject);
 
     //add seo to the document
     //wordDocHtml += 'data:application/vnd.ms-word;charset=utf-8,';
     //wordDocHtml += "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
     wordDocHtml += getComponentHtml("n-page-guidelines");
+    wordDocHtml += getComponentHtml("n-page-seo-guidelines");
     wordDocHtml += populateSEOhtml(htmlObject, currentTab);
     wordDocHtml += buildPageComponent(htmlObject, currentTab);
     wordDocHtml += buildPageComponentsHtml(htmlObject);
+    wordDocHtml += footNoteSection;
     wordDocHtml += postPageContentAdd();
     //wordDocHtml += "</body></html>";
 
@@ -707,9 +715,6 @@ function buildPageComponentsHtml(htmlObject) {
         if (pageComponents[i].localName == "n-card-band") {
             pageComponentHtml += buildCardBandHtml(pageComponents[i]);
         }
-        if(pageComponents[i].localName == "n-footnotes"){
-            pageComponentHtml += buildFootnotes(pageComponents[i]);
-        }
         if (pageComponents[i].localName == "n-fancy-callout") {
             pageComponentHtml += buildFancyCallout(pageComponents[i]);
         }
@@ -868,6 +873,41 @@ function cleanUpHtml(pageComponentHtml) {
     return pageComponentHtml;
 }
 
+function buildFootnotes(tempPageHtml){
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = getComponentHtml('n-page-footnotes');
+    
+    var pageFootnotes = $(tempPageHtml).find("sup.n-page-footnote");
+    var pageDisclaimers = $(tempPageHtml).find("sup.n-page-disclaimer");
+    
+    for(var i = 0; i < pageFootnotes.length; i++){
+        var footnoteHtml = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>"+(i+1)+". "+ pageFootnotes[i].innerHTML +"</strong>&nbsp;<em></em></p>";
+        $(tempObject).find("#page-footnotes").append(footnoteHtml);
+    }
+    var disclaimerStar = "*";
+    for(var i = 0; i < pageDisclaimers.length; i++){
+        var disclaimerHtml = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>"+disclaimerStar+"  "+ pageDisclaimers[i].innerHTML +"</strong>&nbsp;<em></em></p>";
+        $(tempObject).find("#page-disclaimers").append(disclaimerHtml);
+        disclaimerStar += "*";
+    }
+
+    return tempObject.innerHTML;
+
+}
+
+function replaceFootnotesAndDisclaimers(tempPageHtml){
+    var tempObject = document.createElement("div");
+    tempObject.innerHTML = tempPageHtml;
+    
+   $(tempPageHtml).find("sup.n-page-footnote").each(function(index){
+        $(this).html = "&nsbp;<sup>["+(index +1)+"]&nsbp;</sup>";
+    });
+    var pageDisclaimers = $(tempPageHtml).find("sup.n-page-disclaimer");
+
+    
+    return tempPageHtml;
+
+}
 
 //this function will get the first comment for the giving object, and return the name of the Id requested.
 function getCommentInfoFrom(htmlObject, nameOfId) {
@@ -4354,23 +4394,3 @@ function buildPartnerDetailRegion(currentComponent) {
     return tempObject.innerHTML;
 }
 
-function buildFootnotes(){
-    var tempObject = document.createElement("div");
-    tempObject.innerHTML = $("#footnotes").html();
-
-    
-    var footnotesList = $(footnotes[0]).find("footer > div > div.n-page-level-footnotes-left-container");
-    console.log(footnotesList);
-
-    if(typeof footnotesList[0] !== 'undefined'){
-
-    }   
-    
-        
-
-        
-    
-
-    return tempObject.innerHTML;
-
-}
