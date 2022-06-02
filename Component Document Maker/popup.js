@@ -45,6 +45,7 @@ var listOfComponents = [
     ['Page Footnotes', 'Page_Footnotes.html', 'n-page-footnotes', ''],
     ['Page Guidelines', 'Page_Guidelines.html', 'n-page-guidelines', ''],
     ['Page SEO Guidelines', 'Page_SEO_Guidelines.html', 'n-page-seo-guidelines', ''],
+    ['Page SEO Script', 'Page_SEO_Script.html', 'n-page-seo-script', ''],
     ['Partner Connect', 'Partner_Connect_Template.html', 'n-partner-detail-region', ''],
     ['Press Release Article', 'Press_Release_Article.html', 'n-press-release-article', ''],
     ['Product Comparison Table', 'Product_Comparison_Table.html', 'n-product-comparison-table', ''],
@@ -116,6 +117,16 @@ if (componentSearchString.charAt(componentSearchString.length - 1) === ",") {
 function addComponentsHtmlToArray(currentTab) {
     var client = new XMLHttpRequest();
     for (i = 0; i < listOfComponents.length; i++) {
+        $.get('Templates' + '/' + listOfComponents[i][1], function (data) {
+            listOfComponents[i][3] = data;
+        }).fail(function () {
+            console.log("failed to get data from url");
+        });
+
+        
+    }
+    var callCounter = 0;
+    for (i = 0; i < listOfComponents.length; i++) {
         //console.log("current i");
         //console.log(i);
         (function (i) {
@@ -127,32 +138,37 @@ function addComponentsHtmlToArray(currentTab) {
                 //console.log(client[i]);
                 if (client[i].readyState == 4 && client[i].status == 200) {
                     listOfComponents[i][3] = client[i].response;
-
+                    callCounter++;
                     //console.log(listOfComponents[i][0]);
                     //console.log(listOfComponents[i][3]);
-                    if ((i + 1) >= listOfComponents.length) {
-                        console.log("Loaded.");
-
-                        //after components are loaded into the array, what function do we want to call?
-                        if (currentTab.url.startsWith("https://ntapwwwprodstage-web9.azurewebsites.net/quickwires.html") || currentTab.url.startsWith("https://ntapwwwtest-web9.azurewebsites.net/quickwires.html")) {
-                            findComponentsInURL(currentTab);
-                        } else {
-                            if (currentTab.url.startsWith("https://ntapwwwprodstage-web9.azurewebsites.net/") || currentTab.url.startsWith("https://ntapwwwtest-web9.azurewebsites.net/")) {
-                                $.get(currentTab.url, function (data) {
-                                    //console.log(data);
-                                    generateReviewHtml(data, currentTab);
-
-                                }).fail(function () {
-                                    setMessage(null, null, "Error: Could not load the page.(<a href='https://ntapwwwprodstage-web9.azurewebsites.net/' target ='_blank'>Review</a> Down?)");
-                                    stopLoader();
-                                });
-                            }
-                        }
+                    if (callCounter === listOfComponents.length) {
+                        whatWeShouldDo(currentTab);
                     }
                 }
             }
             client[i].send();
         })(i);
+    }
+}
+
+function whatWeShouldDo(currentTab) {
+    console.log("Loaded.");
+
+    //after components are loaded into the array, what function do we want to call?
+    if (currentTab.url.startsWith("https://ntapwwwprodstage-web9.azurewebsites.net/quickwires.html") || currentTab.url.startsWith("https://ntapwwwtest-web9.azurewebsites.net/quickwires.html")) {
+        findComponentsInURL(currentTab);
+        
+    } else {
+        if (currentTab.url.startsWith("https://ntapwwwprodstage-web9.azurewebsites.net/") || currentTab.url.startsWith("https://ntapwwwtest-web9.azurewebsites.net/")) {
+            $.get(currentTab.url, function (data) {
+                //console.log(data);
+                generateReviewHtml(data, currentTab);
+
+            }).fail(function () {
+                setMessage(null, null, "Error: Could not load the page.(<a href='https://ntapwwwprodstage-web9.azurewebsites.net/' target ='_blank'>Review</a> Down?)");
+                stopLoader();
+            });
+        }
     }
 }
 
@@ -326,20 +342,19 @@ function findComponentsInURL(currentTab) {
 }
 
 function buildQuickWiresHtml(components) {
+    console.log(components);
     var tempDiv = document.createElement("div");
-    wordDocHtml += getComponentHtml("n-page-guidelines");
-    wordDocHtml += getComponentHtml("n-page-seo-guidelines");
-    wordDocHtml += getComponentHtml("seo-url-breadcrumb");
-    wordDocHtml += getComponentHtml("n-page");
+    wordDocHtml += "page guidelines </br>" +getComponentHtml("n-page-guidelines");
+    wordDocHtml += "page seo guidelines </br>" +getComponentHtml("n-page-seo-guidelines");
+    wordDocHtml += "page url breadcrumb </br>" +getComponentHtml("seo-url-breadcrumb");
+    wordDocHtml += "page  componetn </br>" +getComponentHtml("n-page");
 
     //add each component html to the word document
     for (var i = 0; i < components.length; i++) {
-        for (var j = 0; j < listOfComponents.length; j++) {
-            if (components[i] == listOfComponents[j][2])
-                wordDocHtml = wordDocHtml + listOfComponents[j][3];
-        }
-
-    }
+                wordDocHtml += getComponentHtml(components[i]); 
+            }
+    wordDocHtml += buildFootnotes();
+    wordDocHtml += buildSEOScriptSection();
     wordDocHtml += postPageContentAdd();
     tempDiv.innerHTML = wordDocHtml;
 
@@ -348,8 +363,9 @@ function buildQuickWiresHtml(components) {
 
 
     //add download function
+    console.log("Button set");
     document.getElementById("download-btn").addEventListener("click", function () {
-        download("quickwires-" + getCurentTimeStamp() + ".doc", tempDiv.innerHTML);
+        download("quickwires-" + getCurentTimeStamp() + ".doc", wordDocHtml);
 
     });
 
@@ -385,6 +401,7 @@ function generateReviewHtml(pageHtml, currentTab) {
     wordDocHtml += buildPageComponent(htmlObject, currentTab);
     wordDocHtml += buildPageComponentsHtml(htmlObject);
     wordDocHtml += footNoteSection;
+    wordDocHtml += buildSEOScriptSection(pageHtml);
     wordDocHtml += postPageContentAdd();
     //wordDocHtml += "</body></html>";
 
@@ -477,6 +494,27 @@ function populateSEOhtml(htmlObject, currentTab) {
 
 
     return seoObject.innerHTML;
+}
+
+function buildSEOScriptSection(htmlPageContent){
+    var tempPageContent = document.createElement('div');
+    tempPageContent.innerHTML = htmlPageContent;
+    
+    var tempDiv = document.createElement('div');
+    tempDiv.innerHTML = getComponentHtml('n-page-seo-script');
+    var pageSEOScript = $(tempPageContent).find("script[type='application/ld+json']");
+    for(var i = 0; i < pageSEOScript.length; i++){
+        $(tempDiv).find("#remove").remove();
+        var scriptSection = "<tr style='height: 53px;'>"+
+        "<td style='width: 495px; border-top: none; border-left:  1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in; height: 53px;'>"+
+        "<code>"+pageSEOScript[i].innerHTML+"</code>"+
+        "</td>"+
+        "</tr>";
+
+        $(tempDiv).find("#tbody-append").append(scriptSection);
+    }
+
+    return tempDiv.innerHTML;
 }
 
 function buildPageComponent(htmlObject, currentTab) {
