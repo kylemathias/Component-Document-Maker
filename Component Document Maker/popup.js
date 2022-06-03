@@ -116,15 +116,6 @@ if (componentSearchString.charAt(componentSearchString.length - 1) === ",") {
 //it then proceeds to call the function related to what url is currently open in the user's current tab
 function addComponentsHtmlToArray(currentTab) {
     var client = new XMLHttpRequest();
-    for (i = 0; i < listOfComponents.length; i++) {
-        $.get('Templates' + '/' + listOfComponents[i][1], function (data) {
-            listOfComponents[i][3] = data;
-        }).fail(function () {
-            console.log("failed to get data from url");
-        });
-
-        
-    }
     var callCounter = 0;
     for (i = 0; i < listOfComponents.length; i++) {
         //console.log("current i");
@@ -344,10 +335,10 @@ function findComponentsInURL(currentTab) {
 function buildQuickWiresHtml(components) {
     console.log(components);
     var tempDiv = document.createElement("div");
-    wordDocHtml += "page guidelines </br>" +getComponentHtml("n-page-guidelines");
-    wordDocHtml += "page seo guidelines </br>" +getComponentHtml("n-page-seo-guidelines");
-    wordDocHtml += "page url breadcrumb </br>" +getComponentHtml("seo-url-breadcrumb");
-    wordDocHtml += "page  componetn </br>" +getComponentHtml("n-page");
+    wordDocHtml += getComponentHtml("n-page-guidelines");
+    wordDocHtml += getComponentHtml("n-page-seo-guidelines");
+    wordDocHtml += getComponentHtml("seo-url-breadcrumb");
+    wordDocHtml += getComponentHtml("n-page");
 
     //add each component html to the word document
     for (var i = 0; i < components.length; i++) {
@@ -358,12 +349,9 @@ function buildQuickWiresHtml(components) {
     wordDocHtml += postPageContentAdd();
     tempDiv.innerHTML = wordDocHtml;
 
-    //$(tempDiv).find("table").attr("style", "border: 4px solid green;");
-    //tempDiv = addNewBorder(tempDiv);
 
 
     //add download function
-    console.log("Button set");
     document.getElementById("download-btn").addEventListener("click", function () {
         download("quickwires-" + getCurentTimeStamp() + ".doc", wordDocHtml);
 
@@ -385,10 +373,12 @@ function addNewBorder(element) {
 
 function generateReviewHtml(pageHtml, currentTab) {
     var htmlObject = document.createElement('html');
-    htmlObject.innerHTML = pageHtml;
-
     //replace all footnotes
     var footNoteSection = buildFootnotes(pageHtml);
+    pageHtml = replaceFootnotesAndDisclaimers(pageHtml);
+    htmlObject.innerHTML = pageHtml;
+
+    
 
     var documentName = generateDocumentName(htmlObject);
 
@@ -919,12 +909,13 @@ function buildFootnotes(tempPageHtml){
     var pageDisclaimers = $(tempPageHtml).find("sup.n-page-disclaimer");
     
     for(var i = 0; i < pageFootnotes.length; i++){
-        var footnoteHtml = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>"+(i+1)+". "+ pageFootnotes[i].innerHTML +"</strong>&nbsp;<em></em></p>";
+        var index = i+1;
+        var footnoteHtml = "<p  id='n-page-footnote"+index+"' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>"+(i+1)+". "+ pageFootnotes[i].innerHTML +"</strong>&nbsp;<em></em></p>";
         $(tempObject).find("#page-footnotes").append(footnoteHtml);
     }
     var disclaimerStar = "*";
     for(var i = 0; i < pageDisclaimers.length; i++){
-        var disclaimerHtml = "<p style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>"+disclaimerStar+"  "+ pageDisclaimers[i].innerHTML +"</strong>&nbsp;<em></em></p>";
+        var disclaimerHtml = "<p id='n-page-disclaimer"+disclaimerStar+"' style='margin: 0in; line-height: normal; font-size: 11pt; font-family: Calibri, sans-serif;'><strong>"+disclaimerStar+"  "+ pageDisclaimers[i].innerHTML +"</strong>&nbsp;<em></em></p>";
         $(tempObject).find("#page-disclaimers").append(disclaimerHtml);
         disclaimerStar += "*";
     }
@@ -934,16 +925,24 @@ function buildFootnotes(tempPageHtml){
 }
 
 function replaceFootnotesAndDisclaimers(tempPageHtml){
-    var tempObject = document.createElement("div");
-    tempObject.innerHTML = tempPageHtml;
+  var tempObject = document.createElement("div");
+  tempObject.innerHTML = tempPageHtml;
     
-   $(tempPageHtml).find("sup.n-page-footnote").each(function(index){
-        $(this).html = "&nsbp;<sup>["+(index +1)+"]&nsbp;</sup>";
+    //replace each n-page-footnote text with its index
+    var index = 1;
+    $(tempObject).find("sup.n-page-footnote").each(function(){
+        $(this).html("<a href='#n-page-footnote"+index+"'>["+index+"]</a>");    
+        index++;
     });
-    var pageDisclaimers = $(tempPageHtml).find("sup.n-page-disclaimer");
 
-    
-    return tempPageHtml;
+    //replace each n-page-disclaimer text with its index *
+    var starIndex = "*";
+    $(tempObject).find("sup.n-page-disclaimer").each(function(){
+        $(this).html("<a href='#n-page-disclaimer"+starIndex+"'>["+starIndex+"]</a>");
+        starIndex += "*";
+    });
+
+    return tempObject.innerHTML;
 
 }
 
