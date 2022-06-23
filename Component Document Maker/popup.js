@@ -1244,8 +1244,9 @@ function buildCallOut(currentComponent) {
     tempObject.innerHTML = getComponentHtml("n-call-out");
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
 
+
+    var headline = $(currentComponent).find("n-primary > n-content > h3");
     var theme = $(currentComponent).attr('n-theme');
-    var headline = $(currentComponent).find("n-content > h1");
     var body = $(currentComponent).find("n-content > n-xpm-richtext");
     var cta = $(currentComponent).find("a.cta");
 
@@ -1296,7 +1297,7 @@ function buildCardBandImages(currentComponent) {
 
     for (var i = 0; i < cards.length; i++) {
         //get the content we need
-        var headline = $(cards[i]).find("n-content > div > h2");
+        var headline = $(cards[i]).find("n-content > div > h3");
         var body = $(cards[i]).find("n-xpm-richtext");
         var cta = $(cards[i]).find("n-content > div > n-button-group").find("a.cta");
         var images = $(cards[i]).find("n-xpm-image > img");
@@ -1444,7 +1445,7 @@ function buildCardBandHtml(currentComponent) {
 
     for (var i = 0; i < cards.length; i++) {
         //get the content we need
-        var headline = $(cards[i]).find("h2");
+        var headline = $(cards[i]).find("n-content > h3");
         var body = $(cards[i]).find("n-xpm-richtext");
         var cta = $(cards[i]).find("n-content > n-button-group").find("a.cta");
 
@@ -1534,7 +1535,7 @@ function buildFeatureTiles(currentComponent) {
     $(tempObject).find("#delete-for-content").remove();
     var tiles = $(currentComponent).find("div.feature-tile-item");
 
-    var primaryHeadline = $(currentComponent).find("n-primary > n-content > h1");
+    var primaryHeadline = $(currentComponent).find("n-primary > n-content > h3");
     var primaryCta = $(currentComponent).find("n-primary > n-content > a.cta");
 
     if (typeof primaryHeadline[0] !== 'undefined') {
@@ -2019,7 +2020,7 @@ function buildImageWithTabs(currentComponent) {
 
     for (var i = 0; i < tabs.length; i++) {
         //get the content we need
-        var headline = $(tabs[i]).find("n-content > h1");
+        var headline = $(tabs[i]).find("n-content > h3");
         var body = $(tabs[i]).find("n-xpm-richtext");
         var cta = $(tabs[i]).find("n-content > n-button-group").find("a.cta");
         var tabTitle = $(tabs[i].parentElement).attr("data-tab-title");
@@ -2125,7 +2126,7 @@ function buildImageWithTiles(currentComponent) {
     }
 
     for (var i = 0; i < tiles.length; i++) {
-        var headline = $(tiles[i]).find("n-content > h2");
+        var headline = $(tiles[i]).find("n-content > h4");
         var body = $(tiles[i]).find("n-content > n-xpm-richtext");
         var linkText = $(tiles[i]).find("n-content > n-button-group > p > n-xpm-text");
         var link = $(tiles[i]).find("a");
@@ -2164,8 +2165,8 @@ function buildIntro(currentComponent) {
     var tempObject = document.createElement("div");
     tempObject.innerHTML = getComponentHtml("n-intro");
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
-    var headline = $(currentComponent).find("n-primary > n-content > h1");
-    var subHead = $(currentComponent).find("n-primary > n-content > h2");
+    var headline = $(currentComponent).find("n-primary > n-content > h3");
+    var subHead = $(currentComponent).find("n-primary > n-content > h4");
     var body = $(currentComponent).find("n-xpm-richtext");
     var cta = $(currentComponent).find("n-button-group").find("a.cta");
     var images = $(currentComponent).find("n-secondary > img");
@@ -2343,7 +2344,7 @@ function buildOffSetCards(currentComponent) {
     tempObject.innerHTML = getComponentHtml("n-offset-cards");
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
 
-    var mainHeadline = $(currentComponent).find("n-primary > n-content > h1");
+    var mainHeadline = $(currentComponent).find("n-primary > n-content > h3");
 
     if (typeof mainHeadline[0] !== 'undefined') {
         $(tempObject).find("#main-headline").html(mainHeadline[0].innerHTML);
@@ -2378,7 +2379,7 @@ function buildOffSetCards(currentComponent) {
     }
 
     for (var i = 0; i < tiles.length; i++) {
-        var headline = $(tiles[i]).find("n-content > h2");
+        var headline = $(tiles[i]).find("n-content > h4");
         var body = $(tiles[i]).find("n-content > n-xpm-richtext");
         var linkText = $(tiles[i]).find("n-content > n-button-group > p > n-xpm-text");
         var link = tiles[i];
@@ -2556,7 +2557,7 @@ function buildQuoteBand(currentComponent) {
     tempObject.innerHTML = getComponentHtml("n-quote-band");
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
 
-    var headline = $(currentComponent).find("n-primary > n-content > blockquote > h2");
+    var headline = $(currentComponent).find("n-primary > n-content > blockquote > h3");
     var body = $(currentComponent).find("n-primary > n-content > blockquote > p, n-primary > n-content > blockquote > div");
     var cta = $(currentComponent).find("n-button-group").find("a.cta");
     var images = $(currentComponent).find("n-secondary-image > img");
@@ -2802,7 +2803,7 @@ function buildSectionHeader(currentComponent) {
     tempObject.innerHTML = getComponentHtml("n-section-header");
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent, "ComponentModified"))));
 
-    var headline = $(currentComponent).find("n-primary > n-content > h1");
+    var headline = $(currentComponent).find("n-primary > n-content > h3");
     var body = $(currentComponent).find("n-xpm-richtext");
     var cta = $(currentComponent).find("n-button-group").find("a.cta");
 
@@ -2846,7 +2847,7 @@ function buildShowcase(currentComponent) {
     tempObject.innerHTML = getComponentHtml("n-showcase");
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
 
-    var leftBarHeadline = $(currentComponent).find("n-primary > n-content > h1");
+    var leftBarHeadline = $(currentComponent).find("n-primary > n-content > h3");
 
     if (typeof leftBarHeadline[0] !== 'undefined') {
         $(tempObject).find("#a1-left-h1").html(leftBarHeadline[0].innerHTML + "&nbsp;<br/>");
@@ -2856,7 +2857,7 @@ function buildShowcase(currentComponent) {
 
     for (var i = 0; i < cards.length; i++) {
         //get the content we need
-        var headline = $(cards[i]).find("n-content > h2");
+        var headline = $(cards[i]).find("n-content > h4");
         var body = $(cards[i]).find("n-content > div > n-richtext");
         var cta = $(cards[i]).find("n-content > n-button-group").find("a.cta");
         var images = $(cards[i]).find("n-content > img");
@@ -3040,7 +3041,7 @@ function buildSideXSideTabs(currentComponent) {
     var tabs = $(currentComponent).find("n-primary > n-tabs > div.tab-content");
 
     for (var i = 0; i < tabs.length; i++) {
-        var headline = $(tabs[i]).find("n-content > h1");
+        var headline = $(tabs[i]).find("n-content > h3");
         var body = $(tabs[i]).find("n-xpm-richtext");
         var cta = $(tabs[i]).find("n-button-group").find("a.cta");
         var tabTitle = $(tabs[i]).attr("data-tab-title");
@@ -3109,7 +3110,7 @@ function buildStatBand(currentComponent) {
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
 
     var theme = $(currentComponent).attr('n-theme');
-    var headline = $(currentComponent).find("h1");
+    var headline = $(currentComponent).find("h3");
     var stats = $(currentComponent).find("ul.n-stat-band-items > li");
 
 
@@ -3146,7 +3147,7 @@ function buildTabbedBandTiles(currentComponent) {
     tempObject.innerHTML = getComponentHtml("n-tabbed-band-tiles");
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
 
-    var headline = $(currentComponent).find("n-primary > div > n-content > h1");
+    var headline = $(currentComponent).find("n-primary > div > n-content > h3");
     var body = $(currentComponent).find("n-xpm-richtext");
     var cta = $(currentComponent).find("n-content").find("a.cta");
     var images = $(currentComponent).find("n-secondary > img");
@@ -3253,7 +3254,7 @@ function buildTabbedBandTiles(currentComponent) {
         }
 
         for (var i = 0; i < tiles.length; i++) {
-            var headline = $(tiles[i]).find("n-content > h1");
+            var headline = $(tiles[i]).find("n-content > h4");
             var body = $(tiles[i]).find("n-content > div > n-xpm-richtext, n-content > n-xpm-richtext");
             var linkText = $(tiles[i]).find("n-content > n-button-group > p.cta");
             var link = tiles[i];
@@ -3388,7 +3389,7 @@ function buildTabbedBand(currentComponent) {
         }
 
 
-        var headline = $(tabs[i]).find("n-content > h1");
+        var headline = $(tabs[i]).find("n-content > h3");
         var body = $(tabs[i]).find("n-xpm-richtext");
         var cta = $(tabs[i]).find("n-button-group").find("a.cta");
         var tabTitle = $(tabs[i]).attr("data-tab-title");
