@@ -1893,7 +1893,9 @@ function buildHero(currentComponent) {
     tempObject.innerHTML = getComponentHtml("n-hero");
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
 
-    var headline = $(currentComponent).find("n-primary > n-content > h1");
+    var headline = $(currentComponent).find("n-primary > n-content > header > h1");
+    var subHead = $(currentComponent).find("n-primary > n-content > header > h2");
+  
     var body = $(currentComponent).find("n-xpm-richtext");
     var cta = $(currentComponent).find("n-button-group").find("a.cta");
     var images = $(currentComponent).find("n-secondary > img");
@@ -1913,6 +1915,10 @@ function buildHero(currentComponent) {
 
     if (typeof headline[0] !== 'undefined') {
         $(tempObject).find("#a1-h1").html(headline[0].innerHTML);
+    }
+
+    if (typeof subHead[0] !== 'undefined') {
+        $(tempObject).find("#a1-h2").html(subHead[0].innerHTML);
     }
 
     if (typeof body[0] !== 'undefined') {
