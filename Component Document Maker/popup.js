@@ -1720,7 +1720,11 @@ function buildCollectionForm(currentComponent){
     var theme = $(currentComponent).attr('n-collection-form-theme');
     var mainImage = $(currentComponent).find("n-primary > n-primary-main > n-dual-content-form-image-video-container > a > img, n-primary > n-primary-main > n-dual-content-form-image-video-container > img");
     var overLayMedia = $(currentComponent).find("n-primary > n-primary-main > n-dual-content-form-image-video-container > a");
-    var mainHeadline = $(currentComponent).find("n-primary > n-content > h1");
+    var mainHeadline = $(currentComponent).find("n-primary > n-content > header > h1");
+    var subHead = $(currentComponent).find(" n-primary > n-content > header > h2");
+    if (mainHeadline.length == 0) {
+        mainHeadline = $(currentComponent).find(" n-primary > n-content > h3");
+    }
     var mainBody = $(currentComponent).find("n-primary > n-content > n-richtext");
     var ctaButtons = $(currentComponent).find("n-primary > n-content> n-button-group > a.cta");
     var secondaryImage = $(currentComponent).find("n-primary > n-content > n-image-container > img");
@@ -1749,6 +1753,10 @@ function buildCollectionForm(currentComponent){
 
     if (typeof mainHeadline[0] !== 'undefined') {
         $(tempObject).find("#main-heading").html(mainHeadline[0].innerHTML+"</br>");
+    }
+
+    if (typeof subHead[0] !== 'undefined') {
+        $(tempObject).find("#main-subhead").html(subHead[0].innerHTML+"</br>");
     }
 
     if(typeof mainBody[0] !== 'undefined'){
@@ -1808,7 +1816,11 @@ function buildDualContentForm(currentComponent){
     var theme = $(currentComponent).attr('n-dual-content-form-theme');
     var mainImage = $(currentComponent).find("n-primary > n-primary-main > n-dual-content-form-image-video-container > a > img, n-primary > n-primary-main > n-dual-content-form-image-video-container > img");
     var overLayMedia = $(currentComponent).find("n-primary > n-primary-main > n-dual-content-form-image-video-container > a");
-    var mainHeadline = $(currentComponent).find(" n-primary > n-primary-main > h1");
+    var mainHeadline = $(currentComponent).find(" n-primary > n-primary-main > header > h1");
+    var subHead = $(currentComponent).find(" n-primary > n-primary-main > header > h2");
+    if (mainHeadline.length == 0) {
+        mainHeadline = $(currentComponent).find(" n-primary > n-primary-main > h3");
+    }
     var mainBody = $(currentComponent).find("n-primary > n-primary-main > n-richtext");
     var ctaButtons = $(currentComponent).find("n-primary > n-primary-main > n-button-group > a.cta");
     var secondaryImage = $(currentComponent).find("n-primary > n-dual-content-form-background-image-container > img");
@@ -1837,6 +1849,10 @@ function buildDualContentForm(currentComponent){
 
     if (typeof mainHeadline[0] !== 'undefined') {
         $(tempObject).find("#main-heading").html(mainHeadline[0].innerHTML+"</br>");
+    }
+
+    if (typeof subHead[0] !== 'undefined') {
+        $(tempObject).find("#main-subhead").html(subHead[0].innerHTML+"</br>");
     }
 
     if(typeof mainBody[0] !== 'undefined'){
@@ -1895,6 +1911,9 @@ function buildHero(currentComponent) {
 
     var headline = $(currentComponent).find("n-primary > n-content > header > h1");
     var subHead = $(currentComponent).find("n-primary > n-content > header > h2");
+    if (headline.length == 0) {
+        headline = $(currentComponent).find("n-primary > n-content > h3");
+    }
   
     var body = $(currentComponent).find("n-xpm-richtext");
     var cta = $(currentComponent).find("n-button-group").find("a.cta");
@@ -2940,7 +2959,11 @@ function buildSideXSide(currentComponent) {
         $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
     }
 
-    var headline = $(currentComponent).find("n-primary > n-content > h1");
+    var headline = $(currentComponent).find("n-primary > n-content > header > h1");
+    var subhead = $(currentComponent).find("n-primary > n-content > header > h2");
+    if (headline.length == 0) {
+        headline = $(currentComponent).find("n-primary > n-content > h3");
+    }
     var body = $(currentComponent).find("n-xpm-richtext");
     var cta = $(currentComponent).find("n-button-group").find("a.cta");
     var images = $(currentComponent).find("n-secondary > img");
@@ -2962,6 +2985,10 @@ function buildSideXSide(currentComponent) {
 
     if (typeof headline[0] !== 'undefined') {
         $(tempObject).find("#a1-h1").html(headline[0].innerHTML);
+    }
+
+    if (typeof subhead[0] !== "undefined") {
+        $(tempObject).find("#a1-h2").html(subhead[0].innerHTML);
     }
 
     if (typeof body[0] !== 'undefined') {
@@ -3455,6 +3482,10 @@ function buildTitle(currentComponent) {
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
     var theme = $(currentComponent).attr('n-theme');
     var headline = $(currentComponent).find("h1");
+    var subhead = $(currentComponent).find("h2");
+    if (headline.length == 0) {
+        headline = $(currentComponent).find("h3");
+    }
     var images = $(currentComponent).find("n-secondary > img");
 
     var eyeBrow = $(currentComponent).find("n-eyebrow > a.eyebrow");
@@ -3477,6 +3508,11 @@ function buildTitle(currentComponent) {
     if (typeof headline[0] !== "undefined") {
         $(tempObject).find("#a1-h1").html(headline[0].innerHTML);
     }
+
+    if (typeof subhead[0] !== "undefined") {
+        $(tempObject).find("#a1-h2").html(subhead[0].innerHTML);
+    }
+
     if (typeof images[0] !== 'undefined') {
         $(tempObject).find("#a1-image-source").html((createImageHtml(images[0])));
         $(tempObject).find("#a1-image-alt-text").html(images[0].alt);
