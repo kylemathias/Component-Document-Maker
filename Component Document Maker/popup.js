@@ -1605,7 +1605,7 @@ function buildFormShort(currentComponent){
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
 
     var theme = $(currentComponent).attr('n-theme');
-    var mainHeadline = $(currentComponent).find("n-primary > n-content > h1");
+    var mainHeadline = $(currentComponent).find("n-primary > n-content > h3");
     var mainBody = $(currentComponent).find("n-primary > n-content > n-richtext");
     var formName = $(currentComponent).find("n-primary > n-content > form.ntapForm");
     var formID = $(currentComponent).find('form[id^=mktoForm]');
@@ -1662,7 +1662,7 @@ function buildFormLong(currentComponent){
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
 
     var theme = $(currentComponent).attr('n-theme');
-    var mainHeadline = $(currentComponent).find("n-primary > n-content > h1");
+    var mainHeadline = $(currentComponent).find("n-primary > n-content > h3");
     var mainBody = $(currentComponent).find("n-primary > n-content > n-richtext");
     var formName = $(currentComponent).find("n-primary > n-content > form.ntapForm");
     var formID = $(currentComponent).find('form[id^=mktoForm]');
