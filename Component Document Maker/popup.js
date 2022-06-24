@@ -1484,7 +1484,7 @@ function buildFancyCallout(currentComponent) {
 
     $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
 
-    var headline = $(currentComponent).find("n-secondary > n-content > h1");
+    var headline = $(currentComponent).find("n-secondary > n-content > h3");
     var body = $(currentComponent).find("n-xpm-richtext");
     var cta = $(currentComponent).find("a.cta");
     var images = $(currentComponent).find("n-primary > picture > img");
