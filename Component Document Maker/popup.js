@@ -2959,8 +2959,8 @@ function buildSideXSide(currentComponent) {
         $(tempObject).find("#heading-append").after(appendCmsInfo(getCommentInfoFrom(currentComponent.parentNode, "ComponentID"), toBrowserTime(getCommentInfoFrom(currentComponent.parentNode, "ComponentModified"))));
     }
 
-    var headline = $(currentComponent).find("n-primary > n-content > header > h1");
-    var subhead = $(currentComponent).find("n-primary > n-content > header > h2");
+    var headline = $(currentComponent).find("h1");
+    var subhead = $(currentComponent).find("h2");
     if (headline.length == 0) {
         headline = $(currentComponent).find("n-primary > n-content > h3");
     }
